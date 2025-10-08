@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Welcome() {
+export default function PortfolioLanding() {
     useEffect(() => {
         // GSAP Animations
         const tl = gsap.timeline();
