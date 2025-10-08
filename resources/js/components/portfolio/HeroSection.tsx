@@ -1,11 +1,19 @@
 import { Button } from '@/components/ui/button';
-import { Github, Linkedin, Twitter } from 'lucide-react';
+import { Github, Instagram, Linkedin } from 'lucide-react';
 
 export default function HeroSection() {
     const socialLinks = [
-        { icon: Github, href: '#', label: 'GitHub' },
-        { icon: Linkedin, href: '#', label: 'LinkedIn' },
-        { icon: Twitter, href: '#', label: 'Twitter' },
+        { icon: Github, href: 'https://github.com/anggarasa', label: 'GitHub' },
+        {
+            icon: Linkedin,
+            href: 'www.linkedin.com/in/anggara-saputra-7baa95318',
+            label: 'LinkedIn',
+        },
+        {
+            icon: Instagram,
+            href: 'https://www.instagram.com/angr_sa/#',
+            label: 'Instagram',
+        },
     ];
 
     return (
@@ -19,7 +27,7 @@ export default function HeroSection() {
                     <div className="hero-content space-y-8">
                         <div className="space-y-4">
                             <h1 className="text-4xl leading-tight font-bold text-black md:text-6xl dark:text-white">
-                                My Job
+                                Full Stack Developer
                             </h1>
                             <p className="text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
                                 Description about my profession and what I do. I

@@ -26,7 +26,7 @@ export default function Header() {
                     {/* Logo */}
                     <div className="flex-shrink-0">
                         <h1 className="text-xl font-bold text-black dark:text-white">
-                            My Name
+                            Anggara Saputra
                         </h1>
                     </div>
 
