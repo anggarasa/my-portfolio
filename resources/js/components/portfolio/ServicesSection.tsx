@@ -30,16 +30,13 @@ export default function ServicesSection() {
     ];
 
     return (
-        <section
-            id="services"
-            className="animate-on-scroll bg-gray-50 py-20 dark:bg-gray-900"
-        >
+        <section id="services" className="animate-on-scroll bg-muted/30 py-20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mb-16 text-center">
-                    <h2 className="mb-4 text-3xl font-bold text-black md:text-4xl dark:text-white">
+                    <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
                         Services
                     </h2>
-                    <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
+                    <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
                         I offer reliable and scalable development services to
                         help businesses build, grow, and innovate in the digital
                         era.
@@ -50,18 +47,18 @@ export default function ServicesSection() {
                     {services.map((service, index) => (
                         <Card
                             key={index}
-                            className="border-gray-200 bg-white transition-shadow duration-300 hover:shadow-lg dark:border-gray-800 dark:bg-black"
+                            className="border-border bg-card transition-shadow duration-300 hover:shadow-lg"
                         >
                             <CardHeader className="text-center">
-                                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-black dark:bg-white">
-                                    <service.icon className="h-8 w-8 text-white dark:text-black" />
+                                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-primary">
+                                    <service.icon className="h-8 w-8 text-primary-foreground" />
                                 </div>
-                                <CardTitle className="text-xl font-semibold text-black dark:text-white">
+                                <CardTitle className="text-xl font-semibold text-card-foreground">
                                     {service.title}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <CardDescription className="text-center text-gray-600 dark:text-gray-300">
+                                <CardDescription className="text-center text-muted-foreground">
                                     {service.description}
                                 </CardDescription>
                             </CardContent>

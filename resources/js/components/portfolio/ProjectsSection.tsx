@@ -58,14 +58,14 @@ export default function ProjectsSection() {
     return (
         <section
             id="projects"
-            className="animate-on-scroll bg-white py-20 dark:bg-black"
+            className="animate-on-scroll bg-background py-20"
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mb-16 text-center">
-                    <h2 className="mb-4 text-3xl font-bold text-black md:text-4xl dark:text-white">
+                    <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
                         My Projects
                     </h2>
-                    <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
+                    <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
                         Description of my recent projects. Here are some of the
                         amazing projects I've worked on that showcase my skills
                         and expertise.
@@ -85,8 +85,8 @@ export default function ProjectsSection() {
                                 onClick={() => setActiveCategory(category)}
                                 className={`${
                                     activeCategory === category
-                                        ? 'bg-black text-white dark:bg-white dark:text-black'
-                                        : 'border-gray-300 text-gray-700 dark:border-gray-700 dark:text-gray-300'
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'border-border text-muted-foreground'
                                 }`}
                             >
                                 {category}
@@ -101,10 +101,10 @@ export default function ProjectsSection() {
                         {filteredProjects.map((project) => (
                             <Card
                                 key={project.id}
-                                className="overflow-hidden border-gray-200 bg-white transition-shadow duration-300 hover:shadow-lg dark:border-gray-800 dark:bg-black"
+                                className="overflow-hidden border-border bg-card transition-shadow duration-300 hover:shadow-lg"
                             >
                                 {/* Project Image */}
-                                <div className="flex aspect-video items-center justify-center bg-gray-200 dark:bg-gray-800">
+                                <div className="flex aspect-video items-center justify-center bg-muted">
                                     <img
                                         src={project.image}
                                         alt={project.title}
@@ -113,10 +113,10 @@ export default function ProjectsSection() {
                                 </div>
 
                                 <CardHeader>
-                                    <CardTitle className="text-xl font-semibold text-black dark:text-white">
+                                    <CardTitle className="text-xl font-semibold text-card-foreground">
                                         {project.title}
                                     </CardTitle>
-                                    <CardDescription className="text-gray-600 dark:text-gray-300">
+                                    <CardDescription className="text-muted-foreground">
                                         {project.description}
                                     </CardDescription>
                                 </CardHeader>
@@ -127,7 +127,7 @@ export default function ProjectsSection() {
                                         {project.technologies.map((tech) => (
                                             <span
                                                 key={tech}
-                                                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                                className="rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground"
                                             >
                                                 {tech}
                                             </span>
@@ -139,7 +139,7 @@ export default function ProjectsSection() {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className="flex-1 border-gray-300 dark:border-gray-700"
+                                            className="flex-1 border-border"
                                             asChild
                                         >
                                             <a

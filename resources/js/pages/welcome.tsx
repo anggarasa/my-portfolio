@@ -96,7 +96,7 @@ export default function Welcome() {
                 />
             </Head>
 
-            <div className="min-h-screen bg-white text-black dark:bg-black dark:text-white">
+            <div className="min-h-screen bg-background text-foreground">
                 <Header />
                 <main>
                     <HeroSection />

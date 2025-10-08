@@ -54,13 +54,10 @@ export default function ContactSection() {
     ];
 
     return (
-        <section
-            id="contact"
-            className="animate-on-scroll bg-gray-50 py-20 dark:bg-gray-900"
-        >
+        <section id="contact" className="animate-on-scroll bg-muted/30 py-20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mb-16 text-center">
-                    <h2 className="mb-4 text-3xl font-bold text-black md:text-4xl dark:text-white">
+                    <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
                         Contact Me
                     </h2>
                 </div>
@@ -69,7 +66,7 @@ export default function ContactSection() {
                     {/* Left Side - Contact Info & Social Media */}
                     <div className="space-y-8">
                         <div>
-                            <h3 className="mb-6 text-xl font-semibold text-black dark:text-white">
+                            <h3 className="mb-6 text-xl font-semibold text-foreground">
                                 My Contact & Social Media
                             </h3>
 
@@ -80,14 +77,14 @@ export default function ContactSection() {
                                         key={info.label}
                                         className="flex items-center space-x-3"
                                     >
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-black dark:bg-white">
-                                            <info.icon className="h-5 w-5 text-white dark:text-black" />
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+                                            <info.icon className="h-5 w-5 text-primary-foreground" />
                                         </div>
                                         <div>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            <p className="text-sm text-muted-foreground">
                                                 {info.label}
                                             </p>
-                                            <p className="font-medium text-gray-900 dark:text-white">
+                                            <p className="font-medium text-foreground">
                                                 {info.value}
                                             </p>
                                         </div>
@@ -97,7 +94,7 @@ export default function ContactSection() {
 
                             {/* Social Media Links */}
                             <div>
-                                <h4 className="mb-4 text-lg font-medium text-black dark:text-white">
+                                <h4 className="mb-4 text-lg font-medium text-foreground">
                                     Follow Me
                                 </h4>
                                 <div className="flex space-x-4">
@@ -106,7 +103,7 @@ export default function ContactSection() {
                                             key={social.label}
                                             variant="outline"
                                             size="sm"
-                                            className="h-12 w-12 rounded-full border-gray-300 p-0 hover:border-black dark:border-gray-700 dark:hover:border-white"
+                                            className="h-12 w-12 rounded-full border-border p-0 hover:border-primary"
                                             asChild
                                         >
                                             <a
@@ -115,7 +112,7 @@ export default function ContactSection() {
                                                 rel="noopener noreferrer"
                                                 aria-label={social.label}
                                             >
-                                                <social.icon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                                                <social.icon className="h-5 w-5 text-muted-foreground" />
                                             </a>
                                         </Button>
                                     ))}
@@ -126,12 +123,12 @@ export default function ContactSection() {
 
                     {/* Right Side - Contact Form */}
                     <div>
-                        <Card className="border-gray-200 bg-white dark:border-gray-800 dark:bg-black">
+                        <Card className="border-border bg-card">
                             <CardHeader>
-                                <CardTitle className="text-xl font-semibold text-black dark:text-white">
+                                <CardTitle className="text-xl font-semibold text-card-foreground">
                                     Send Message
                                 </CardTitle>
-                                <CardDescription className="text-gray-600 dark:text-gray-300">
+                                <CardDescription className="text-muted-foreground">
                                     Get in touch with me for any project or
                                     collaboration.
                                 </CardDescription>
@@ -144,7 +141,7 @@ export default function ContactSection() {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="name"
-                                            className="text-gray-700 dark:text-gray-300"
+                                            className="text-muted-foreground"
                                         >
                                             Name
                                         </Label>
@@ -155,7 +152,7 @@ export default function ContactSection() {
                                             placeholder="Your name"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            className="border-gray-300 focus:border-black dark:border-gray-700 dark:focus:border-white"
+                                            className="border-border focus:border-primary"
                                             required
                                         />
                                     </div>
@@ -163,7 +160,7 @@ export default function ContactSection() {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="email"
-                                            className="text-gray-700 dark:text-gray-300"
+                                            className="text-muted-foreground"
                                         >
                                             Email
                                         </Label>
@@ -174,7 +171,7 @@ export default function ContactSection() {
                                             placeholder="Your email"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className="border-gray-300 focus:border-black dark:border-gray-700 dark:focus:border-white"
+                                            className="border-border focus:border-primary"
                                             required
                                         />
                                     </div>
@@ -182,7 +179,7 @@ export default function ContactSection() {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="message"
-                                            className="text-gray-700 dark:text-gray-300"
+                                            className="text-muted-foreground"
                                         >
                                             Message
                                         </Label>
@@ -193,14 +190,14 @@ export default function ContactSection() {
                                             value={formData.message}
                                             onChange={handleChange}
                                             rows={4}
-                                            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-black focus:outline-none dark:border-gray-700 dark:bg-black dark:text-white dark:placeholder-gray-400 dark:focus:ring-white"
+                                            className="w-full rounded-md border border-border bg-background px-3 py-2 text-foreground placeholder-muted-foreground focus:border-transparent focus:ring-2 focus:ring-primary focus:outline-none"
                                             required
                                         />
                                     </div>
 
                                     <Button
                                         type="submit"
-                                        className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                                     >
                                         Send Message
                                     </Button>

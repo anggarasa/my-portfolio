@@ -20,12 +20,12 @@ export default function Header() {
     ];
 
     return (
-        <header className="fixed top-0 right-0 left-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-black/80">
+        <header className="fixed top-0 right-0 left-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <h1 className="text-xl font-bold text-black dark:text-white">
+                        <h1 className="text-xl font-bold text-foreground">
                             Anggara Saputra
                         </h1>
                     </div>
@@ -36,7 +36,7 @@ export default function Header() {
                             <a
                                 key={item.name}
                                 href={item.href}
-                                className="text-gray-700 transition-colors duration-200 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                                className="text-muted-foreground transition-colors duration-200 hover:text-foreground"
                             >
                                 {item.name}
                             </a>
@@ -49,7 +49,7 @@ export default function Header() {
                             variant="ghost"
                             size="sm"
                             onClick={toggleTheme}
-                            className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                            className="text-muted-foreground hover:text-foreground"
                         >
                             {appearance === 'dark' ? (
                                 <Sun className="h-5 w-5" />
@@ -62,7 +62,7 @@ export default function Header() {
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="text-gray-700 hover:text-black md:hidden dark:text-gray-300 dark:hover:text-white"
+                            className="text-muted-foreground hover:text-foreground md:hidden"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                         >
                             {isMenuOpen ? (
@@ -77,12 +77,12 @@ export default function Header() {
                 {/* Mobile Navigation */}
                 {isMenuOpen && (
                     <div className="md:hidden">
-                        <div className="space-y-1 border-t border-gray-200 bg-white px-2 pt-2 pb-3 dark:border-gray-800 dark:bg-black">
+                        <div className="space-y-1 border-t border-border bg-background px-2 pt-2 pb-3">
                             {navItems.map((item) => (
                                 <a
                                     key={item.name}
                                     href={item.href}
-                                    className="block px-3 py-2 text-gray-700 transition-colors duration-200 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                                    className="block px-3 py-2 text-muted-foreground transition-colors duration-200 hover:text-foreground"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     {item.name}

@@ -140,10 +140,7 @@ export default function AboutSection() {
     }, []);
 
     return (
-        <section
-            id="about"
-            className="animate-on-scroll bg-white py-20 dark:bg-black"
-        >
+        <section id="about" className="animate-on-scroll bg-background py-20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
                     {/* Left Content - Profile Image & Technologies */}
@@ -151,8 +148,8 @@ export default function AboutSection() {
                         {/* Profile Image */}
                         <div className="flex justify-center lg:justify-start">
                             <div className="relative" ref={techIconsRef}>
-                                <div className="flex h-64 w-64 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
-                                    <div className="flex h-full w-full items-center justify-center bg-gray-300 dark:bg-gray-600">
+                                <div className="flex h-64 w-64 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-muted to-muted/50">
+                                    <div className="flex h-full w-full items-center justify-center bg-muted/30">
                                         {/* <span className="text-lg text-gray-500 dark:text-gray-400">
                                             Foto
                                         </span> */}
@@ -205,14 +202,14 @@ export default function AboutSection() {
 
                         {/* Technology Labels - Improved Design */}
                         <div className="text-center lg:text-left">
-                            <p className="mb-4 text-sm font-medium text-gray-600 dark:text-gray-400">
+                            <p className="mb-4 text-sm font-medium text-muted-foreground">
                                 Mastered Technology
                             </p>
                             <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
                                 {technologies.map((tech) => (
                                     <span
                                         key={tech.name}
-                                        className="rounded-full bg-gradient-to-r from-gray-100 to-gray-200 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-shadow duration-200 hover:shadow-md dark:from-gray-800 dark:to-gray-700 dark:text-gray-300"
+                                        className="rounded-full bg-muted px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm transition-shadow duration-200 hover:text-foreground hover:shadow-md"
                                     >
                                         {tech.name}
                                     </span>
@@ -224,10 +221,10 @@ export default function AboutSection() {
                     {/* Right Content - About Text & Skills */}
                     <div className="space-y-8">
                         <div className="space-y-4">
-                            <h2 className="text-3xl font-bold text-black md:text-4xl dark:text-white">
+                            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
                                 About Me
                             </h2>
-                            <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+                            <p className="text-lg leading-relaxed text-muted-foreground">
                                 I’m a dedicated Full Stack Developer with
                                 expertise in modern web and mobile technologies.
                                 I specialize in building efficient, scalable,
@@ -241,7 +238,7 @@ export default function AboutSection() {
 
                         {/* Technologies Cards */}
                         <div className="space-y-6">
-                            <h3 className="text-xl font-semibold text-black dark:text-white">
+                            <h3 className="text-xl font-semibold text-foreground">
                                 Technologies I Master
                             </h3>
                             <div
@@ -251,7 +248,7 @@ export default function AboutSection() {
                                 {technologies.map((tech, index) => (
                                     <div
                                         key={tech.name}
-                                        className="tech-card group relative overflow-hidden rounded-xl bg-white p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800"
+                                        className="tech-card group relative overflow-hidden rounded-xl bg-card p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
                                         style={{
                                             animationDelay: `${index * 0.1}s`,
                                         }}
@@ -263,14 +260,14 @@ export default function AboutSection() {
 
                                         {/* Content */}
                                         <div className="relative z-10 flex flex-col items-center space-y-2">
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 transition-all duration-300 group-hover:scale-110 group-hover:bg-white dark:bg-gray-700 group-hover:dark:bg-gray-600">
+                                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted transition-all duration-300 group-hover:scale-110 group-hover:bg-background">
                                                 <img
                                                     src={tech.icon}
                                                     alt={tech.name}
                                                     className="h-6 w-6 transition-all duration-300 group-hover:scale-110"
                                                 />
                                             </div>
-                                            <span className="text-center text-sm font-medium text-gray-700 transition-colors duration-300 group-hover:text-gray-900 dark:text-gray-300 group-hover:dark:text-white">
+                                            <span className="text-center text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
                                                 {tech.name}
                                             </span>
                                         </div>
