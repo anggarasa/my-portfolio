@@ -58,16 +58,21 @@ export default function Welcome() {
             );
         });
 
-        // Smooth scrolling for navigation links
+        // Smooth scrolling for navigation links with header offset
         const handleNavClick = (e: Event) => {
             const target = e.target as HTMLAnchorElement;
             if (target.hash) {
                 e.preventDefault();
                 const element = document.querySelector(target.hash);
                 if (element) {
-                    element.scrollIntoView({
+                    const headerHeight = window.innerWidth < 768 ? 100 : 80; // Mobile: 100px, Desktop: 80px
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition =
+                        elementPosition + window.pageYOffset - headerHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
                         behavior: 'smooth',
-                        block: 'start',
                     });
                 }
             }

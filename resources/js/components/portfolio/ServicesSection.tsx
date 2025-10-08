@@ -30,20 +30,20 @@ export default function ServicesSection() {
     ];
 
     return (
-        <section id="services" className="animate-on-scroll bg-muted/30 py-20">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mb-16 text-center">
-                    <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+        <section id="services" className="animate-on-scroll bg-muted/30 py-16">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div className="mb-12 text-center">
+                    <h2 className="mb-3 text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
                         Services
                     </h2>
-                    <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+                    <p className="mx-auto max-w-2xl text-sm text-muted-foreground sm:text-base">
                         I offer reliable and scalable development services to
                         help businesses build, grow, and innovate in the digital
                         era.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                     {services.map((service, index) => (
                         <Card
                             key={index}

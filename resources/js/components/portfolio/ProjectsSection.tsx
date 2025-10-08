@@ -58,21 +58,21 @@ export default function ProjectsSection() {
     return (
         <section
             id="projects"
-            className="animate-on-scroll bg-background py-20"
+            className="animate-on-scroll bg-background py-16"
         >
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mb-16 text-center">
-                    <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div className="mb-12 text-center">
+                    <h2 className="mb-3 text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
                         My Projects
                     </h2>
-                    <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
+                    <p className="mx-auto mb-6 max-w-2xl text-sm text-muted-foreground sm:text-base">
                         Description of my recent projects. Here are some of the
                         amazing projects I've worked on that showcase my skills
                         and expertise.
                     </p>
 
                     {/* Category Filters */}
-                    <div className="flex flex-wrap justify-center gap-4">
+                    <div className="flex flex-wrap justify-center gap-3">
                         {categories.map((category) => (
                             <Button
                                 key={category}
@@ -97,7 +97,7 @@ export default function ProjectsSection() {
 
                 {/* Projects Grid */}
                 {filteredProjects.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {filteredProjects.map((project) => (
                             <Card
                                 key={project.id}

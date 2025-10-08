@@ -54,24 +54,24 @@ export default function ContactSection() {
     ];
 
     return (
-        <section id="contact" className="animate-on-scroll bg-muted/30 py-20">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mb-16 text-center">
-                    <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+        <section id="contact" className="animate-on-scroll bg-muted/30 py-16">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div className="mb-12 text-center">
+                    <h2 className="mb-3 text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
                         Contact Me
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                     {/* Left Side - Contact Info & Social Media */}
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         <div>
-                            <h3 className="mb-6 text-xl font-semibold text-foreground">
+                            <h3 className="mb-4 text-lg font-semibold text-foreground">
                                 My Contact & Social Media
                             </h3>
 
                             {/* Contact Information */}
-                            <div className="mb-8 space-y-4">
+                            <div className="mb-6 space-y-3">
                                 {contactInfo.map((info) => (
                                     <div
                                         key={info.label}
@@ -94,16 +94,16 @@ export default function ContactSection() {
 
                             {/* Social Media Links */}
                             <div>
-                                <h4 className="mb-4 text-lg font-medium text-foreground">
+                                <h4 className="mb-3 text-base font-medium text-foreground">
                                     Follow Me
                                 </h4>
-                                <div className="flex space-x-4">
+                                <div className="flex space-x-3">
                                     {socialLinks.map((social) => (
                                         <Button
                                             key={social.label}
                                             variant="outline"
                                             size="sm"
-                                            className="h-12 w-12 rounded-full border-border p-0 hover:border-primary"
+                                            className="h-10 w-10 rounded-full border-border p-0 hover:border-primary"
                                             asChild
                                         >
                                             <a
@@ -112,7 +112,7 @@ export default function ContactSection() {
                                                 rel="noopener noreferrer"
                                                 aria-label={social.label}
                                             >
-                                                <social.icon className="h-5 w-5 text-muted-foreground" />
+                                                <social.icon className="h-4 w-4 text-muted-foreground" />
                                             </a>
                                         </Button>
                                     ))}

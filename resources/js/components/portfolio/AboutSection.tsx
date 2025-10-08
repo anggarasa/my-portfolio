@@ -140,15 +140,15 @@ export default function AboutSection() {
     }, []);
 
     return (
-        <section id="about" className="animate-on-scroll bg-background py-20">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+        <section id="about" className="animate-on-scroll bg-background py-16">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
                     {/* Left Content - Profile Image & Technologies */}
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         {/* Profile Image */}
                         <div className="flex justify-center lg:justify-start">
                             <div className="relative" ref={techIconsRef}>
-                                <div className="flex h-64 w-64 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-muted to-muted/50">
+                                <div className="flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-muted to-muted/50 sm:h-56 sm:w-56">
                                     <div className="flex h-full w-full items-center justify-center bg-muted/30">
                                         {/* <span className="text-lg text-gray-500 dark:text-gray-400">
                                             Foto
@@ -219,12 +219,12 @@ export default function AboutSection() {
                     </div>
 
                     {/* Right Content - About Text & Skills */}
-                    <div className="space-y-8">
-                        <div className="space-y-4">
-                            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+                    <div className="space-y-6">
+                        <div className="space-y-3">
+                            <h2 className="text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
                                 About Me
                             </h2>
-                            <p className="text-lg leading-relaxed text-muted-foreground">
+                            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
                                 I’m a dedicated Full Stack Developer with
                                 expertise in modern web and mobile technologies.
                                 I specialize in building efficient, scalable,
@@ -237,8 +237,8 @@ export default function AboutSection() {
                         </div>
 
                         {/* Technologies Cards */}
-                        <div className="space-y-6">
-                            <h3 className="text-xl font-semibold text-foreground">
+                        <div className="space-y-4">
+                            <h3 className="text-lg font-semibold text-foreground">
                                 Technologies I Master
                             </h3>
                             <div
