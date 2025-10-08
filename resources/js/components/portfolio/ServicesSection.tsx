@@ -5,7 +5,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Code, Palette, Smartphone } from 'lucide-react';
+import { Code, Server, Smartphone } from 'lucide-react';
 
 export default function ServicesSection() {
     const services = [
@@ -16,10 +16,10 @@ export default function ServicesSection() {
                 'Custom web applications built with modern technologies like React, Laravel, and Node.js.',
         },
         {
-            icon: Palette,
-            title: 'UI/UX Design',
+            icon: Server,
+            title: 'Backend Development',
             description:
-                'Beautiful and intuitive user interfaces designed with user experience in mind.',
+                'Robust server-side applications and APIs built with Laravel, Node.js, and modern backend technologies.',
         },
         {
             icon: Smartphone,
@@ -40,9 +40,9 @@ export default function ServicesSection() {
                         Services
                     </h2>
                     <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
-                        Description of the services I provide. I offer
-                        comprehensive solutions to help your business succeed in
-                        the digital world.
+                        I offer reliable and scalable development services to
+                        help businesses build, grow, and innovate in the digital
+                        era.
                     </p>
                 </div>
 
