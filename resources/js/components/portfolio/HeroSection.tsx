@@ -27,13 +27,12 @@ export default function HeroSection() {
                     <div className="hero-content space-y-8">
                         <div className="space-y-4">
                             <h1 className="text-4xl leading-tight font-bold text-black md:text-6xl dark:text-white">
-                                Full Stack Developer
+                                Web & Mobile Developer
                             </h1>
                             <p className="text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
-                                Description about my profession and what I do. I
-                                create amazing digital experiences that help
-                                businesses grow and succeed in the digital
-                                world.
+                                Web and Mobile Developer skilled in PHP,
+                                Laravel, React, and Flutter. I build scalable
+                                digital solutions that help businesses grow.
                             </p>
                         </div>
 
@@ -57,13 +56,21 @@ export default function HeroSection() {
                             ))}
                         </div>
 
-                        {/* CTA Button */}
+                        {/* Download CV Button */}
                         <div className="pt-4">
                             <Button
                                 size="lg"
                                 className="bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                                asChild
                             >
-                                Get In Touch
+                                <a
+                                    href="/assets/docs/CV-Anggara_Saputra.pdf"
+                                    download
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Download CV
+                                </a>
                             </Button>
                         </div>
                     </div>
