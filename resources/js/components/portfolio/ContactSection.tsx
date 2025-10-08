@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Github, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-react';
+import { Github, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ContactSection() {
@@ -34,15 +34,23 @@ export default function ContactSection() {
     };
 
     const contactInfo = [
-        { icon: Mail, label: 'Email', value: 'contact@example.com' },
-        { icon: Phone, label: 'Phone', value: '+1 (555) 123-4567' },
-        { icon: MapPin, label: 'Location', value: 'New York, USA' },
+        { icon: Mail, label: 'Email', value: 'anggarasaputra273@gmail.com' },
+        { icon: Phone, label: 'Phone', value: '+62 812-2424-2608' },
+        { icon: MapPin, label: 'Location', value: 'West Java, Indonesia' },
     ];
 
     const socialLinks = [
-        { icon: Github, href: '#', label: 'GitHub' },
-        { icon: Linkedin, href: '#', label: 'LinkedIn' },
-        { icon: Twitter, href: '#', label: 'Twitter' },
+        { icon: Github, href: 'https://github.com/anggarasa', label: 'GitHub' },
+        {
+            icon: Linkedin,
+            href: 'https://www.linkedin.com/in/anggara-saputra-7baa95318',
+            label: 'LinkedIn',
+        },
+        {
+            icon: Instagram,
+            href: 'https://www.instagram.com/angr_sa/#',
+            label: 'Instagram',
+        },
     ];
 
     return (
@@ -103,6 +111,8 @@ export default function ContactSection() {
                                         >
                                             <a
                                                 href={social.href}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 aria-label={social.label}
                                             >
                                                 <social.icon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
