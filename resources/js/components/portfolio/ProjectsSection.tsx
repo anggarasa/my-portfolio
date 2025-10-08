@@ -12,52 +12,41 @@ import { useState } from 'react';
 export default function ProjectsSection() {
     const [activeCategory, setActiveCategory] = useState('All');
 
-    const categories = ['All', 'Web App', 'Mobile App', 'Design'];
+    const categories = ['All', 'Web App', 'Mobile App', 'Back End'];
 
     const projects = [
         {
             id: 1,
-            title: 'E-Commerce Platform',
+            title: 'ThreadLoop',
             description:
-                'A full-stack e-commerce solution with modern UI and secure payment integration.',
-            image: '/api/placeholder/400/300',
-            technologies: ['React', 'Laravel'],
+                'A modern social media platform built with Laravel and Livewire, allowing users to share content, interact, and connect with other users around the world.',
+            image: '/assets/images/img_threadloop.png',
+            technologies: ['Laravel', 'MySQL', 'TailwindCSS', 'Livewire'],
             category: 'Web App',
-            github: '#',
-            live: '#',
+            github: 'https://github.com/anggarasa/thread-loop',
+            live: 'https://thread-loop.vercel.app/',
         },
         {
             id: 2,
-            title: 'Task Management App',
+            title: 'Web Cashier',
             description:
-                'A collaborative task management application with real-time updates and team features.',
-            image: '/api/placeholder/400/300',
-            technologies: ['React', 'Node.js'],
+                'A cashier website built using Laravel version 12 with modern technology to support ease and efficiency of business operations.',
+            image: '/assets/images/img_web_kasir.png',
+            technologies: ['Laravel', 'MySQL', 'TailwindCSS', 'Livewire'],
             category: 'Web App',
-            github: '#',
-            live: '#',
+            github: 'https://github.com/anggarasa/Web-Kasir',
+            live: 'https://web-kasir-phi.vercel.app/',
         },
         {
             id: 3,
-            title: 'Mobile Banking App',
+            title: 'AppSos API',
             description:
-                'A secure mobile banking application with biometric authentication and transaction management.',
-            image: '/api/placeholder/400/300',
-            technologies: ['React Native', 'Laravel'],
-            category: 'Mobile App',
-            github: '#',
-            live: '#',
-        },
-        {
-            id: 4,
-            title: 'Portfolio Website',
-            description:
-                'A modern portfolio website with dark mode and smooth animations.',
-            image: '/api/placeholder/400/300',
-            technologies: ['React', 'TailwindCSS'],
-            category: 'Design',
-            github: '#',
-            live: '#',
+                'This API provides complete features for social media platforms such as user authentication, posting, commenting, liking, saving, following, and notifications.',
+            image: '/assets/images/img_appsos_api.png',
+            technologies: ['ExpressJS', 'PostgreSQL', 'TypeScript', 'Prisma'],
+            category: 'Back End',
+            github: 'https://github.com/anggarasa/AppSos-API',
+            live: 'https://app-sos-docs.vercel.app/',
         },
     ];
 
@@ -107,69 +96,109 @@ export default function ProjectsSection() {
                 </div>
 
                 {/* Projects Grid */}
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                    {filteredProjects.map((project) => (
-                        <Card
-                            key={project.id}
-                            className="overflow-hidden border-gray-200 bg-white transition-shadow duration-300 hover:shadow-lg dark:border-gray-800 dark:bg-black"
-                        >
-                            {/* Project Image */}
-                            <div className="flex aspect-video items-center justify-center bg-gray-200 dark:bg-gray-800">
-                                <span className="text-gray-500 dark:text-gray-400">
-                                    Image
-                                </span>
-                            </div>
+                {filteredProjects.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                        {filteredProjects.map((project) => (
+                            <Card
+                                key={project.id}
+                                className="overflow-hidden border-gray-200 bg-white transition-shadow duration-300 hover:shadow-lg dark:border-gray-800 dark:bg-black"
+                            >
+                                {/* Project Image */}
+                                <div className="flex aspect-video items-center justify-center bg-gray-200 dark:bg-gray-800">
+                                    <img
+                                        src={project.image}
+                                        alt={project.title}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
 
-                            <CardHeader>
-                                <CardTitle className="text-xl font-semibold text-black dark:text-white">
-                                    {project.title}
-                                </CardTitle>
-                                <CardDescription className="text-gray-600 dark:text-gray-300">
-                                    {project.description}
-                                </CardDescription>
-                            </CardHeader>
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-semibold text-black dark:text-white">
+                                        {project.title}
+                                    </CardTitle>
+                                    <CardDescription className="text-gray-600 dark:text-gray-300">
+                                        {project.description}
+                                    </CardDescription>
+                                </CardHeader>
 
-                            <CardContent className="space-y-4">
-                                {/* Technologies */}
-                                <div className="flex flex-wrap gap-2">
-                                    {project.technologies.map((tech) => (
-                                        <span
-                                            key={tech}
-                                            className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                <CardContent className="space-y-4">
+                                    {/* Technologies */}
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.technologies.map((tech) => (
+                                            <span
+                                                key={tech}
+                                                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                            >
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex gap-3">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex-1 border-gray-300 dark:border-gray-700"
+                                            asChild
                                         >
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                {/* Action Buttons */}
-                                <div className="flex gap-3">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="flex-1 border-gray-300 dark:border-gray-700"
-                                        asChild
-                                    >
-                                        <a href={project.github}>
-                                            <Github className="mr-2 h-4 w-4" />
-                                            Code
-                                        </a>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        className="flex-1 bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
-                                        asChild
-                                    >
-                                        <a href={project.live}>
-                                            <ExternalLink className="mr-2 h-4 w-4" />
-                                            Live Demo
-                                        </a>
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                                            <a
+                                                href={project.github}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <Github className="mr-2 h-4 w-4" />
+                                                Code
+                                            </a>
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            className="flex-1 bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                                            asChild
+                                        >
+                                            <a
+                                                href={project.live}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <ExternalLink className="mr-2 h-4 w-4" />
+                                                Live Demo
+                                            </a>
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-20">
+                        <div className="mb-6 rounded-full bg-gray-100 p-6 dark:bg-gray-800">
+                            <svg
+                                className="h-16 w-16 text-gray-400 dark:text-gray-500"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.5}
+                                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 className="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">
+                            No Projects Found
+                        </h3>
+                        <p className="text-center text-gray-500 dark:text-gray-400">
+                            There are no projects in the "{activeCategory}"
+                            category yet.
+                            <br />
+                            Please check back later or explore other categories.
+                        </p>
+                    </div>
+                )}
             </div>
         </section>
     );
