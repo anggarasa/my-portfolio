@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import DeleteConfirmationModal from '@/components/ui/delete-confirmation-modal';
 import { useToast } from '@/hooks/use-toast';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -40,6 +41,7 @@ interface ContactShowProps {
 
 export default function ContactShow({ contact }: ContactShowProps) {
     const [processing, setProcessing] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const { showSuccess, showError } = useToast();
 
     const {
@@ -100,12 +102,26 @@ export default function ContactShow({ contact }: ContactShowProps) {
     };
 
     const handleDelete = () => {
-        if (confirm('Are you sure you want to delete this contact message?')) {
-            setProcessing(true);
-            router.delete(`/admin/contacts/${contact.id}`, {
-                onFinish: () => setProcessing(false),
-            });
-        }
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = () => {
+        setProcessing(true);
+        router.delete(`/admin/contacts/${contact.id}`, {
+            onSuccess: () => {
+                showSuccess('Contact message deleted successfully!');
+                setShowDeleteModal(false);
+            },
+            onError: (errors) => {
+                const errorMessage =
+                    (errors as any).error ||
+                    'Failed to delete contact message. Please try again.';
+                showError(errorMessage);
+            },
+            onFinish: () => {
+                setProcessing(false);
+            },
+        });
     };
 
     const handleSendReply = (e: React.FormEvent) => {
@@ -446,6 +462,18 @@ export default function ContactShow({ contact }: ContactShowProps) {
                     </div>
                 </div>
             </div>
+
+            <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleConfirmDelete}
+                title="Delete Contact Message"
+                description="Are you sure you want to delete this contact message from"
+                itemName={contact.name}
+                isLoading={processing}
+                confirmText="Delete Message"
+                cancelText="Cancel"
+            />
         </AppSidebarLayout>
     );
 }

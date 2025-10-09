@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import DeleteConfirmationModal from '@/components/ui/delete-confirmation-modal';
 import {
     Table,
     TableBody,
@@ -15,6 +16,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import { CheckCircle, Eye, Mail, MessageCircle, Trash2 } from 'lucide-react';
@@ -42,6 +44,11 @@ interface ContactsIndexProps {
 
 export default function ContactsIndex({ contacts }: ContactsIndexProps) {
     const [processing, setProcessing] = useState<number | null>(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [contactToDelete, setContactToDelete] = useState<Contact | null>(
+        null,
+    );
+    const { showSuccess, showError } = useToast();
 
     const handleMarkAsRead = (contactId: number) => {
         setProcessing(contactId);
@@ -65,13 +72,31 @@ export default function ContactsIndex({ contacts }: ContactsIndexProps) {
         );
     };
 
-    const handleDelete = (contactId: number) => {
-        if (confirm('Are you sure you want to delete this contact message?')) {
-            setProcessing(contactId);
-            router.delete(`/admin/contacts/${contactId}`, {
-                onFinish: () => setProcessing(null),
-            });
-        }
+    const handleDelete = (contact: Contact) => {
+        setContactToDelete(contact);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (!contactToDelete) return;
+
+        setProcessing(contactToDelete.id);
+        router.delete(`/admin/contacts/${contactToDelete.id}`, {
+            onSuccess: () => {
+                showSuccess('Contact message deleted successfully!');
+                setShowDeleteModal(false);
+                setContactToDelete(null);
+            },
+            onError: (errors) => {
+                const errorMessage =
+                    (errors as any).error ||
+                    'Failed to delete contact message. Please try again.';
+                showError(errorMessage);
+            },
+            onFinish: () => {
+                setProcessing(null);
+            },
+        });
     };
 
     const getStatusBadge = (status: string) => {
@@ -311,7 +336,7 @@ export default function ContactsIndex({ contacts }: ContactsIndexProps) {
                                                             size="sm"
                                                             onClick={() =>
                                                                 handleDelete(
-                                                                    contact.id,
+                                                                    contact,
                                                                 )
                                                             }
                                                             disabled={
@@ -405,6 +430,21 @@ export default function ContactsIndex({ contacts }: ContactsIndexProps) {
                     </Card>
                 )}
             </div>
+
+            <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                onClose={() => {
+                    setShowDeleteModal(false);
+                    setContactToDelete(null);
+                }}
+                onConfirm={handleConfirmDelete}
+                title="Delete Contact Message"
+                description="Are you sure you want to delete this contact message from"
+                itemName={contactToDelete?.name}
+                isLoading={processing === contactToDelete?.id}
+                confirmText="Delete Message"
+                cancelText="Cancel"
+            />
         </AppSidebarLayout>
     );
 }
