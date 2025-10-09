@@ -38,12 +38,12 @@ class ContactController extends Controller
     }
 
     /**
-     * Get all contacts (for admin panel - future use)
+     * Get all contacts (admin panel)
      */
     public function index(): Response
     {
         $contacts = Contact::orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(15);
 
         return Inertia::render('admin/contacts/index', [
             'contacts' => $contacts,
@@ -51,7 +51,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Show specific contact (for admin panel - future use)
+     * Show specific contact (admin panel)
      */
     public function show(Contact $contact): Response
     {
@@ -66,12 +66,33 @@ class ContactController extends Controller
     }
 
     /**
-     * Mark contact as replied (for admin panel - future use)
+     * Mark contact as read
+     */
+    public function markAsRead(Contact $contact): RedirectResponse
+    {
+        $contact->markAsRead();
+
+        return redirect()->back()->with('success', 'Contact marked as read.');
+    }
+
+    /**
+     * Mark contact as replied
      */
     public function markAsReplied(Contact $contact): RedirectResponse
     {
         $contact->markAsReplied();
 
         return redirect()->back()->with('success', 'Contact status has been updated to "Replied".');
+    }
+
+    /**
+     * Delete contact
+     */
+    public function destroy(Contact $contact): RedirectResponse
+    {
+        $contact->delete();
+
+        return redirect()->route('admin.contacts.index')
+            ->with('success', 'Contact message has been deleted.');
     }
 }
