@@ -5,6 +5,7 @@ import Header from '@/components/portfolio/Header';
 import HeroSection from '@/components/portfolio/HeroSection';
 import ProjectsSection from '@/components/portfolio/ProjectsSection';
 import ServicesSection from '@/components/portfolio/ServicesSection';
+import { Toaster } from '@/components/ui/sonner';
 import { Head } from '@inertiajs/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -111,6 +112,7 @@ export default function Welcome() {
                     <ContactSection />
                 </main>
                 <Footer />
+                <Toaster />
             </div>
         </>
     );

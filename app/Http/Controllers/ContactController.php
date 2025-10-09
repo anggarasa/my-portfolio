@@ -25,14 +25,14 @@ class ContactController extends Controller
             Mail::to(config('mail.from.address'))
                 ->send(new ContactNotification($contact));
 
-            return redirect()->back()->with('success', 'Pesan Anda telah berhasil dikirim! Saya akan merespons secepat mungkin.');
+            return redirect()->back()->with('success', 'Your message has been sent successfully! I will respond as soon as possible.');
 
         } catch (\Exception $e) {
             // Log the error
             \Log::error('Contact form submission failed: ' . $e->getMessage());
 
             return redirect()->back()
-                ->withErrors(['error' => 'Terjadi kesalahan saat mengirim pesan. Silakan coba lagi atau hubungi saya langsung melalui email.'])
+                ->withErrors(['error' => 'An error occurred while sending your message. Please try again or contact me directly via email.'])
                 ->withInput();
         }
     }
@@ -72,6 +72,6 @@ class ContactController extends Controller
     {
         $contact->markAsReplied();
 
-        return redirect()->back()->with('success', 'Status kontak telah diperbarui menjadi "Dibalas".');
+        return redirect()->back()->with('success', 'Contact status has been updated to "Replied".');
     }
 }

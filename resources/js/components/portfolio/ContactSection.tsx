@@ -8,11 +8,15 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import contact from '@/routes/contact';
 import { useForm } from '@inertiajs/react';
 import { Github, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function ContactSection() {
+    const { showSuccess, showError } = useToast();
+
     const {
         data,
         setData,
@@ -27,11 +31,41 @@ export default function ContactSection() {
         message: '',
     });
 
+    // Show toast messages based on form state
+    useEffect(() => {
+        if (recentlySuccessful) {
+            showSuccess(
+                'Your message has been sent successfully! I will respond as soon as possible.',
+            );
+        }
+    }, [recentlySuccessful, showSuccess]);
+
+    // Show error toast if there are general errors (not field-specific)
+    useEffect(() => {
+        const hasGeneralError =
+            Object.keys(errors).length > 0 &&
+            !errors.name &&
+            !errors.email &&
+            !errors.message;
+
+        if (hasGeneralError) {
+            showError(
+                'An error occurred while sending your message. Please try again.',
+            );
+        }
+    }, [errors, showError]);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post(contact.store.url(), {
             onSuccess: () => {
                 reset();
+            },
+            onError: (errors) => {
+                // Handle specific field errors if needed
+                if (errors.name || errors.email || errors.message) {
+                    showError('Please check the form fields and try again.');
+                }
             },
         });
     };
@@ -137,29 +171,6 @@ export default function ContactSection() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                {recentlySuccessful && (
-                                    <div className="mb-4 rounded-md border border-green-200 bg-green-50 p-4 text-green-800">
-                                        <p className="text-sm font-medium">
-                                            ✅ Pesan Anda telah berhasil
-                                            dikirim! Saya akan merespons secepat
-                                            mungkin.
-                                        </p>
-                                    </div>
-                                )}
-
-                                {Object.keys(errors).length > 0 &&
-                                    !errors.name &&
-                                    !errors.email &&
-                                    !errors.message && (
-                                        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
-                                            <p className="text-sm font-medium">
-                                                ❌ Terjadi kesalahan saat
-                                                mengirim pesan. Silakan coba
-                                                lagi.
-                                            </p>
-                                        </div>
-                                    )}
-
                                 <form
                                     onSubmit={handleSubmit}
                                     className="space-y-6"
@@ -263,7 +274,7 @@ export default function ContactSection() {
                                         className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                                     >
                                         {processing
-                                            ? 'Mengirim...'
+                                            ? 'Sending...'
                                             : 'Send Message'}
                                     </Button>
                                 </form>

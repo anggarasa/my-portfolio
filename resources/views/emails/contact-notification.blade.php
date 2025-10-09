@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesan Baru dari Portfolio</title>
+    <title>New Message from Portfolio</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -91,13 +91,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📧 Pesan Baru dari Portfolio</h1>
-            <p>Anda menerima pesan baru melalui formulir kontak portfolio</p>
+            <h1>📧 New Message from Portfolio</h1>
+            <p>You have received a new message through your portfolio contact form</p>
         </div>
 
         <div class="info-section">
             <div class="info-row">
-                <div class="info-label">Nama:</div>
+                <div class="info-label">Name:</div>
                 <div class="info-value">{{ $contact->name }}</div>
             </div>
             <div class="info-row">
@@ -112,24 +112,24 @@
                 <div class="info-label">Status:</div>
                 <div class="info-value">
                     <span style="background-color: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-size: 11px;">
-                        BARU
+                        NEW
                     </span>
                 </div>
             </div>
         </div>
 
         <div class="message-section">
-            <h3>💬 Pesan:</h3>
+            <h3>💬 Message:</h3>
             <div class="message-content">{{ $contact->message }}</div>
         </div>
 
         <div class="timestamp">
-            Diterima pada: {{ $contact->created_at->format('d M Y, H:i:s') }} WIB
+            Received at: {{ $contact->created_at->format('M d, Y \a\t H:i:s') }}
         </div>
 
         <div class="footer">
-            <p>Pesan ini dikirim otomatis dari sistem portfolio Anda.</p>
-            <p>Segera balas pesan ini untuk memberikan respons yang baik kepada pengunjung.</p>
+            <p>This message was sent automatically from your portfolio system.</p>
+            <p>Please reply to this message promptly to provide good service to your visitor.</p>
         </div>
     </div>
 </body>

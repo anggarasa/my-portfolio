@@ -36,13 +36,13 @@ class ContactRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Nama harus diisi.',
-            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
-            'email.required' => 'Email harus diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
-            'message.required' => 'Pesan harus diisi.',
-            'message.max' => 'Pesan tidak boleh lebih dari 2000 karakter.',
+            'name.required' => 'Name is required.',
+            'name.max' => 'Name cannot exceed 255 characters.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.max' => 'Email cannot exceed 255 characters.',
+            'message.required' => 'Message is required.',
+            'message.max' => 'Message cannot exceed 2000 characters.',
         ];
     }
 }

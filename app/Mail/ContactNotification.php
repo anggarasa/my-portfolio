@@ -30,7 +30,7 @@ class ContactNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pesan Baru dari Portfolio - ' . $this->contact->name,
+            subject: 'New Message from Portfolio - ' . $this->contact->name,
         );
     }
 

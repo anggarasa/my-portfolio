@@ -45,5 +45,8 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+
+        <!-- Toast Container -->
+        <div id="toast-container"></div>
     </body>
 </html>
