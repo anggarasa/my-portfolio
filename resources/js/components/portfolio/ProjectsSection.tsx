@@ -6,6 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { Link } from '@inertiajs/react';
 import { ExternalLink, Github } from 'lucide-react';
 import { useState } from 'react';
 
@@ -114,7 +115,12 @@ export default function ProjectsSection() {
 
                                 <CardHeader>
                                     <CardTitle className="text-xl font-semibold text-card-foreground">
-                                        {project.title}
+                                        <Link
+                                            href={`/project/${project.id}`}
+                                            className="cursor-pointer transition-colors duration-200 hover:text-primary hover:underline"
+                                        >
+                                            {project.title}
+                                        </Link>
                                     </CardTitle>
                                     <CardDescription className="text-muted-foreground">
                                         {project.description}
@@ -135,11 +141,11 @@ export default function ProjectsSection() {
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="flex gap-3">
+                                    <div className="flex gap-2">
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className="flex-1 border-border"
+                                            className="flex-1 border-border hover:bg-muted"
                                             asChild
                                         >
                                             <a
