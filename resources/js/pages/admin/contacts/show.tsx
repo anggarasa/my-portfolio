@@ -16,6 +16,7 @@ import {
     Calendar,
     CheckCircle,
     ExternalLink,
+    FileText,
     Mail,
     MessageCircle,
     Save,
@@ -328,6 +329,19 @@ export default function ContactShow({ contact }: ContactShowProps) {
                                         Mark as Replied
                                     </Button>
                                 )}
+
+                                <Button
+                                    variant="outline"
+                                    className="h-12 w-full justify-start"
+                                    asChild
+                                >
+                                    <Link
+                                        href={`/admin/contacts/${contact.id}/drafts`}
+                                    >
+                                        <FileText className="mr-2 h-4 w-4" />
+                                        View Drafts
+                                    </Link>
+                                </Button>
 
                                 <Button
                                     variant="outline"

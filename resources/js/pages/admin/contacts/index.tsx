@@ -19,7 +19,14 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router } from '@inertiajs/react';
-import { CheckCircle, Eye, Mail, MessageCircle, Trash2 } from 'lucide-react';
+import {
+    CheckCircle,
+    Eye,
+    FileText,
+    Mail,
+    MessageCircle,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 
 interface Contact {
@@ -286,6 +293,20 @@ export default function ContactsIndex({ contacts }: ContactsIndexProps) {
                                                                 title="View Details"
                                                             >
                                                                 <Eye className="h-4 w-4" />
+                                                            </Link>
+                                                        </Button>
+
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            asChild
+                                                            className="h-8 w-8 p-0"
+                                                        >
+                                                            <Link
+                                                                href={`/admin/contacts/${contact.id}/drafts`}
+                                                                title="View Drafts"
+                                                            >
+                                                                <FileText className="h-4 w-4" />
                                                             </Link>
                                                         </Button>
 
