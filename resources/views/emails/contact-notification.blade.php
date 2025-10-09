@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Message from Portfolio</title>
+    <title>New Message from Anggara Saputra - Developer</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -91,7 +91,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📧 New Message from Portfolio</h1>
+            <h1>📧 New Message from Anggara Saputra - Developer</h1>
             <p>You have received a new message through your portfolio contact form</p>
         </div>
 

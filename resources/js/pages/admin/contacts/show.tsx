@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
@@ -21,7 +22,7 @@ import {
     Trash2,
     User,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Contact {
     id: number;
@@ -39,6 +40,7 @@ interface ContactShowProps {
 
 export default function ContactShow({ contact }: ContactShowProps) {
     const [processing, setProcessing] = useState(false);
+    const { showSuccess, showError } = useToast();
 
     const {
         data,
@@ -47,10 +49,33 @@ export default function ContactShow({ contact }: ContactShowProps) {
         processing: formProcessing,
         errors,
         reset,
+        recentlySuccessful,
     } = useForm({
         subject: `Re: Contact from Portfolio`,
         message: '',
     });
+
+    // Show success toast when form is successfully submitted
+    useEffect(() => {
+        if (recentlySuccessful) {
+            showSuccess('Reply sent successfully!');
+        }
+    }, [recentlySuccessful, showSuccess]);
+
+    // Show error toast if there are general errors (not field-specific)
+    useEffect(() => {
+        const hasGeneralError =
+            Object.keys(errors).length > 0 &&
+            !errors.subject &&
+            !errors.message;
+
+        if (hasGeneralError) {
+            const errorMessage =
+                (errors as any).error ||
+                'An error occurred while sending the reply. Please try again.';
+            showError(errorMessage);
+        }
+    }, [errors, showError]);
 
     const handleMarkAsRead = () => {
         setProcessing(true);
@@ -89,6 +114,12 @@ export default function ContactShow({ contact }: ContactShowProps) {
             onSuccess: () => {
                 reset();
             },
+            onError: (errors) => {
+                const errorMessage =
+                    (errors as any).error ||
+                    'Failed to send reply. Please try again.';
+                showError(errorMessage);
+            },
         });
     };
 
@@ -96,7 +127,14 @@ export default function ContactShow({ contact }: ContactShowProps) {
         e.preventDefault();
         post(`/admin/contacts/${contact.id}/reply/draft`, {
             onSuccess: () => {
+                showSuccess('Draft saved successfully!');
                 // Don't reset form for draft
+            },
+            onError: (errors) => {
+                const errorMessage =
+                    (errors as any).error ||
+                    'Failed to save draft. Please try again.';
+                showError(errorMessage);
             },
         });
     };
