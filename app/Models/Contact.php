@@ -42,4 +42,19 @@ class Contact extends Model
     {
         $this->update(['status' => 'replied']);
     }
+
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
+
+    public function draftReplies()
+    {
+        return $this->hasMany(Reply::class)->where('status', 'draft');
+    }
+
+    public function sentReplies()
+    {
+        return $this->hasMany(Reply::class)->where('status', 'sent');
+    }
 }

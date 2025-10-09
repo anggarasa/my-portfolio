@@ -8,7 +8,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
     ArrowLeft,
     Calendar,
@@ -16,6 +16,8 @@ import {
     ExternalLink,
     Mail,
     MessageCircle,
+    Save,
+    Send,
     Trash2,
     User,
 } from 'lucide-react';
@@ -37,6 +39,18 @@ interface ContactShowProps {
 
 export default function ContactShow({ contact }: ContactShowProps) {
     const [processing, setProcessing] = useState(false);
+
+    const {
+        data,
+        setData,
+        post,
+        processing: formProcessing,
+        errors,
+        reset,
+    } = useForm({
+        subject: `Re: Contact from Portfolio`,
+        message: '',
+    });
 
     const handleMarkAsRead = () => {
         setProcessing(true);
@@ -67,6 +81,24 @@ export default function ContactShow({ contact }: ContactShowProps) {
                 onFinish: () => setProcessing(false),
             });
         }
+    };
+
+    const handleSendReply = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(`/admin/contacts/${contact.id}/reply/send`, {
+            onSuccess: () => {
+                reset();
+            },
+        });
+    };
+
+    const handleSaveDraft = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(`/admin/contacts/${contact.id}/reply/draft`, {
+            onSuccess: () => {
+                // Don't reset form for draft
+            },
+        });
     };
 
     const getStatusBadge = (status: string) => {
@@ -289,40 +321,87 @@ export default function ContactShow({ contact }: ContactShowProps) {
                             </CardHeader>
                             <CardContent className="p-6">
                                 <div className="space-y-4">
-                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                        <div>
-                                            <label className="text-sm font-medium text-muted-foreground">
-                                                To
-                                            </label>
-                                            <p className="text-sm font-medium">
-                                                {contact.email}
-                                            </p>
+                                    <form
+                                        onSubmit={handleSendReply}
+                                        className="space-y-4"
+                                    >
+                                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                            <div>
+                                                <label className="text-sm font-medium text-muted-foreground">
+                                                    To
+                                                </label>
+                                                <p className="text-sm font-medium">
+                                                    {contact.email}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium text-muted-foreground">
+                                                    Subject
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={data.subject}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            'subject',
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    className="mt-1 w-full rounded-lg border p-2 text-sm focus:border-transparent focus:ring-2 focus:ring-primary"
+                                                    placeholder="Enter subject..."
+                                                />
+                                                {errors.subject && (
+                                                    <p className="mt-1 text-sm text-red-600">
+                                                        {errors.subject}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
                                         <div>
                                             <label className="text-sm font-medium text-muted-foreground">
-                                                Subject
+                                                Message
                                             </label>
-                                            <p className="text-sm font-medium">
-                                                Re: Contact from Portfolio
-                                            </p>
+                                            <textarea
+                                                value={data.message}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'message',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="mt-2 w-full resize-none rounded-lg border p-4 focus:border-transparent focus:ring-2 focus:ring-primary"
+                                                rows={6}
+                                                placeholder="Type your reply here..."
+                                            />
+                                            {errors.message && (
+                                                <p className="mt-1 text-sm text-red-600">
+                                                    {errors.message}
+                                                </p>
+                                            )}
                                         </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium text-muted-foreground">
-                                            Message
-                                        </label>
-                                        <textarea
-                                            className="mt-2 w-full resize-none rounded-lg border p-4 focus:border-transparent focus:ring-2 focus:ring-primary"
-                                            rows={6}
-                                            placeholder="Type your reply here..."
-                                        />
-                                    </div>
-                                    <div className="flex gap-3">
-                                        <Button>Send Reply</Button>
-                                        <Button variant="outline">
-                                            Save Draft
-                                        </Button>
-                                    </div>
+                                        <div className="flex gap-3">
+                                            <Button
+                                                type="submit"
+                                                disabled={formProcessing}
+                                                className="flex items-center gap-2"
+                                            >
+                                                <Send className="h-4 w-4" />
+                                                {formProcessing
+                                                    ? 'Sending...'
+                                                    : 'Send Reply'}
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                onClick={handleSaveDraft}
+                                                disabled={formProcessing}
+                                                className="flex items-center gap-2"
+                                            >
+                                                <Save className="h-4 w-4" />
+                                                Save Draft
+                                            </Button>
+                                        </div>
+                                    </form>
                                 </div>
                             </CardContent>
                         </Card>

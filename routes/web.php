@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ReplyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -198,6 +199,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('contacts/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contacts.mark-read');
         Route::patch('contacts/{contact}/mark-replied', [ContactController::class, 'markAsReplied'])->name('contacts.mark-replied');
         Route::delete('contacts/{contact}', [ContactController::class, 'destroy'])->name('contacts.destroy');
+
+        // Reply Routes
+        Route::post('contacts/{contact}/reply/send', [ReplyController::class, 'sendReply'])->name('contacts.reply.send');
+        Route::post('contacts/{contact}/reply/draft', [ReplyController::class, 'storeDraft'])->name('contacts.reply.draft');
+        Route::get('contacts/{contact}/drafts', [ReplyController::class, 'getDrafts'])->name('contacts.drafts');
+        Route::patch('contacts/{contact}/drafts/{reply}', [ReplyController::class, 'updateDraft'])->name('contacts.drafts.update');
+        Route::post('contacts/{contact}/drafts/{reply}/send', [ReplyController::class, 'sendDraft'])->name('contacts.drafts.send');
+        Route::delete('contacts/{contact}/drafts/{reply}', [ReplyController::class, 'deleteDraft'])->name('contacts.drafts.delete');
     });
 });
 
