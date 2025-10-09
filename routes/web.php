@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -181,6 +182,9 @@ Route::get('/project/{id}', function ($id) {
 
     return Inertia::render('project-detail', ['project' => $project]);
 })->name('project.detail');
+
+// Contact form route
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

@@ -8,11 +8,20 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import contact from '@/routes/contact';
+import { useForm } from '@inertiajs/react';
 import { Github, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
-import { useState } from 'react';
 
 export default function ContactSection() {
-    const [formData, setFormData] = useState({
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        reset,
+        recentlySuccessful,
+    } = useForm({
         name: '',
         email: '',
         message: '',
@@ -20,16 +29,10 @@ export default function ContactSection() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission here
-        console.log('Form submitted:', formData);
-    };
-
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
+        post(contact.store.url(), {
+            onSuccess: () => {
+                reset();
+            },
         });
     };
 
@@ -134,6 +137,29 @@ export default function ContactSection() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
+                                {recentlySuccessful && (
+                                    <div className="mb-4 rounded-md border border-green-200 bg-green-50 p-4 text-green-800">
+                                        <p className="text-sm font-medium">
+                                            ✅ Pesan Anda telah berhasil
+                                            dikirim! Saya akan merespons secepat
+                                            mungkin.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {Object.keys(errors).length > 0 &&
+                                    !errors.name &&
+                                    !errors.email &&
+                                    !errors.message && (
+                                        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
+                                            <p className="text-sm font-medium">
+                                                ❌ Terjadi kesalahan saat
+                                                mengirim pesan. Silakan coba
+                                                lagi.
+                                            </p>
+                                        </div>
+                                    )}
+
                                 <form
                                     onSubmit={handleSubmit}
                                     className="space-y-6"
@@ -150,11 +176,22 @@ export default function ContactSection() {
                                             name="name"
                                             type="text"
                                             placeholder="Your name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            className="border-border focus:border-primary"
+                                            value={data.name}
+                                            onChange={(e) =>
+                                                setData('name', e.target.value)
+                                            }
+                                            className={`border-border focus:border-primary ${
+                                                errors.name
+                                                    ? 'border-red-500'
+                                                    : ''
+                                            }`}
                                             required
                                         />
+                                        {errors.name && (
+                                            <p className="text-sm text-red-600">
+                                                {errors.name}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className="space-y-2">
@@ -169,11 +206,22 @@ export default function ContactSection() {
                                             name="email"
                                             type="email"
                                             placeholder="Your email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            className="border-border focus:border-primary"
+                                            value={data.email}
+                                            onChange={(e) =>
+                                                setData('email', e.target.value)
+                                            }
+                                            className={`border-border focus:border-primary ${
+                                                errors.email
+                                                    ? 'border-red-500'
+                                                    : ''
+                                            }`}
                                             required
                                         />
+                                        {errors.email && (
+                                            <p className="text-sm text-red-600">
+                                                {errors.email}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className="space-y-2">
@@ -187,19 +235,36 @@ export default function ContactSection() {
                                             id="message"
                                             name="message"
                                             placeholder="Your message"
-                                            value={formData.message}
-                                            onChange={handleChange}
+                                            value={data.message}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'message',
+                                                    e.target.value,
+                                                )
+                                            }
                                             rows={4}
-                                            className="w-full rounded-md border border-border bg-background px-3 py-2 text-foreground placeholder-muted-foreground focus:border-transparent focus:ring-2 focus:ring-primary focus:outline-none"
+                                            className={`w-full rounded-md border bg-background px-3 py-2 text-foreground placeholder-muted-foreground focus:border-transparent focus:ring-2 focus:ring-primary focus:outline-none ${
+                                                errors.message
+                                                    ? 'border-red-500'
+                                                    : 'border-border'
+                                            }`}
                                             required
                                         />
+                                        {errors.message && (
+                                            <p className="text-sm text-red-600">
+                                                {errors.message}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <Button
                                         type="submit"
-                                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                                        disabled={processing}
+                                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                                     >
-                                        Send Message
+                                        {processing
+                                            ? 'Mengirim...'
+                                            : 'Send Message'}
                                     </Button>
                                 </form>
                             </CardContent>
