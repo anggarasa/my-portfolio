@@ -18,7 +18,7 @@ export default function ProjectCTA({}: ProjectCTAProps) {
                 </p>
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
                     <Button size="lg" variant="secondary" asChild>
-                        <Link href="/portfolio#contact">Get In Touch</Link>
+                        <Link href="/#contact">Get In Touch</Link>
                     </Button>
                     <Button
                         size="lg"
@@ -26,7 +26,7 @@ export default function ProjectCTA({}: ProjectCTAProps) {
                         className="border-white/20 bg-white text-black hover:bg-white/90 hover:text-black"
                         asChild
                     >
-                        <Link href="/portfolio">View More Projects</Link>
+                        <Link href="/">View More Projects</Link>
                     </Button>
                 </div>
             </div>

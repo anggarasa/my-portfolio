@@ -9,9 +9,6 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('/portfolio', function () {
-    return Inertia::render('portfolio');
-})->name('portfolio');
 
 Route::get('/project/{id}', function ($id) {
     // Sample project data - in real app, this would come from database

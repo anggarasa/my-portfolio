@@ -18,7 +18,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
         <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
             <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
-                    <Link href="/portfolio">
+                    <Link href="/">
                         <Button variant="ghost" size="sm" className="gap-2">
                             <ArrowLeft className="h-4 w-4" />
                             Back to Portfolio
