@@ -6,7 +6,6 @@ import ProjectGallery from '@/components/project/ProjectGallery';
 import ProjectHeader from '@/components/project/ProjectHeader';
 import ProjectHero from '@/components/project/ProjectHero';
 import ProjectOverview from '@/components/project/ProjectOverview';
-import ProjectTestimonial from '@/components/project/ProjectTestimonial';
 import { Head } from '@inertiajs/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -148,10 +147,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                             />
                         )}
 
-                    {/* Testimonial */}
-                    {project.testimonial && (
+                    {/* Testimonial - Commented out until project management feature is implemented */}
+                    {/* {project.testimonial && (
                         <ProjectTestimonial testimonial={project.testimonial} />
-                    )}
+                    )} */}
 
                     <ProjectCTA />
                 </main>
