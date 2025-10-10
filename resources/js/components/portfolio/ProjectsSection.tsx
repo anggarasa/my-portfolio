@@ -25,7 +25,7 @@ export default function ProjectsSection() {
             technologies: ['Laravel', 'MySQL', 'TailwindCSS', 'Livewire'],
             category: 'Web App',
             github: 'https://github.com/anggarasa/thread-loop',
-            live: 'https://thread-loop.vercel.app/',
+            live: 'https://threadloop.web.id/',
         },
         {
             id: 2,

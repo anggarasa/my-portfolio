@@ -30,7 +30,7 @@ Route::get('/project/{id}', function ($id) {
             'technologies' => ['Laravel 12', 'Livewire', 'Tailwind CSS 4', 'MySQL', 'Cloudinary'],
             'category' => 'Social Media Platform',
             'github' => 'https://github.com/anggarasa/thread-loop',
-            'live' => 'https://thread-loop.vercel.app/',
+            'live' => 'https://threadloop.web.id/',
             'duration' => '1 months',
             'year' => '2025',
             'role' => 'Full Stack Developer',
