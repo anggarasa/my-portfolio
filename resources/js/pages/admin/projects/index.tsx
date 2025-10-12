@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import DeleteConfirmationModal from '@/components/ui/delete-confirmation-modal';
 import { Input } from '@/components/ui/input';
 import {
     Select,
@@ -17,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router } from '@inertiajs/react';
-import { Edit, Eye, Plus, Search } from 'lucide-react';
+import { Edit, Eye, Plus, Search, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface Project {
@@ -53,6 +54,13 @@ export default function ProjectsIndex({
     const [search, setSearch] = useState(filters.search || '');
     const [category, setCategory] = useState(filters.category || '');
     const [status, setStatus] = useState(filters.status || '');
+    const [deleteModal, setDeleteModal] = useState<{
+        isOpen: boolean;
+        project: Project | null;
+    }>({
+        isOpen: false,
+        project: null,
+    });
 
     const handleSearch = () => {
         router.get(
@@ -92,6 +100,26 @@ export default function ProjectsIndex({
                 replace: true,
             },
         );
+    };
+
+    const handleDeleteProject = (projectId: string) => {
+        router.delete(`/admin/projects/${projectId}`, {
+            onSuccess: () => {
+                setDeleteModal({ isOpen: false, project: null });
+                // The page will automatically refresh due to Inertia
+            },
+            onError: (errors) => {
+                console.error('Error deleting project:', errors);
+            },
+        });
+    };
+
+    const openDeleteModal = (project: Project) => {
+        setDeleteModal({ isOpen: true, project });
+    };
+
+    const closeDeleteModal = () => {
+        setDeleteModal({ isOpen: false, project: null });
     };
 
     const getStatusColor = (status: string) => {
@@ -317,6 +345,19 @@ export default function ProjectsIndex({
                                                                 Edit
                                                             </Link>
                                                         </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() =>
+                                                                openDeleteModal(
+                                                                    project,
+                                                                )
+                                                            }
+                                                            className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950 dark:hover:text-red-300"
+                                                        >
+                                                            <Trash2 className="mr-2 h-4 w-4" />
+                                                            Delete
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </CardContent>
@@ -425,6 +466,21 @@ export default function ProjectsIndex({
                     </Card>
                 )}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={closeDeleteModal}
+                onConfirm={() =>
+                    deleteModal.project &&
+                    handleDeleteProject(deleteModal.project.id)
+                }
+                title="Delete Project"
+                description="Are you sure you want to delete this project? This action cannot be undone and will permanently remove the project and all associated images."
+                itemName={deleteModal.project?.title}
+                confirmText="Delete Project"
+                cancelText="Cancel"
+            />
         </AppSidebarLayout>
     );
 }
