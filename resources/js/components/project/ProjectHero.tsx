@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 
 interface ProjectHeroProps {
     project: {
-        id: number;
+        id: string;
         title: string;
         description: string;
         category: string;

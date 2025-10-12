@@ -16,23 +16,23 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectDetailProps {
     project: {
-        id: number;
+        id: string;
         title: string;
         description: string;
-        longDescription: string;
+        long_description: string;
         image: string;
         images: string[];
         technologies: string[];
         category: string;
-        github: string;
-        live: string;
+        github_url: string;
+        live_url: string;
         duration: string;
         year: string;
         role: string;
         challenges: string[];
         solutions: string[];
         features: string[];
-        demoAccounts?: {
+        demo_accounts?: {
             role: string;
             email: string;
             password: string;
@@ -113,7 +113,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                                 <ProjectOverview
-                                    longDescription={project.longDescription}
+                                    longDescription={project.long_description}
                                 />
                                 <ProjectFeatures features={project.features} />
                             </div>
@@ -139,11 +139,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                     </section>
 
                     {/* Demo Accounts */}
-                    {project.demoAccounts &&
-                        project.demoAccounts.length > 0 && (
+                    {project.demo_accounts &&
+                        project.demo_accounts.length > 0 && (
                             <ProjectDemo
-                                demoAccounts={project.demoAccounts}
-                                liveUrl={project.live}
+                                demoAccounts={project.demo_accounts}
+                                liveUrl={project.live_url}
                             />
                         )}
 

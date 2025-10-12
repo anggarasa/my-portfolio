@@ -4,12 +4,12 @@ import { ArrowLeft, ExternalLink, Github } from 'lucide-react';
 
 interface ProjectHeaderProps {
     project: {
-        id: number;
+        id: string;
         title: string;
         description: string;
         category: string;
-        github: string;
-        live: string;
+        github_url: string;
+        live_url: string;
     };
 }
 
@@ -25,26 +25,30 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
                         </Button>
                     </Link>
                     <div className="flex gap-3">
-                        <Button variant="outline" size="sm" asChild>
-                            <a
-                                href={project.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Github className="mr-2 h-4 w-4" />
-                                Code
-                            </a>
-                        </Button>
-                        <Button size="sm" asChild>
-                            <a
-                                href={project.live}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <ExternalLink className="mr-2 h-4 w-4" />
-                                Live Demo
-                            </a>
-                        </Button>
+                        {project.github_url && (
+                            <Button variant="outline" size="sm" asChild>
+                                <a
+                                    href={project.github_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Github className="mr-2 h-4 w-4" />
+                                    Code
+                                </a>
+                            </Button>
+                        )}
+                        {project.live_url && (
+                            <Button size="sm" asChild>
+                                <a
+                                    href={project.live_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <ExternalLink className="mr-2 h-4 w-4" />
+                                    Live Demo
+                                </a>
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>
