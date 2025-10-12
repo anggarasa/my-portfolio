@@ -15,6 +15,7 @@ interface Project {
     title: string;
     description: string;
     image: string;
+    image_url?: string;
     technologies: string[];
     category: string;
     github_url: string;
@@ -118,7 +119,10 @@ export default function ProjectsSection() {
                                 {/* Project Image */}
                                 <div className="flex aspect-video items-center justify-center bg-muted">
                                     <img
-                                        src={project.image}
+                                        src={
+                                            project.image_url ||
+                                            `/storage/projects/${project.image}`
+                                        }
                                         alt={project.title}
                                         className="h-full w-full object-cover"
                                     />

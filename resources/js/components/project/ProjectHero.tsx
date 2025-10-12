@@ -41,7 +41,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                     <div className="project-image">
                         <div className="relative overflow-hidden rounded-lg bg-muted">
                             <img
-                                src={project.image}
+                                src={
+                                    project.image_url ||
+                                    `/storage/projects/${project.image}`
+                                }
                                 alt={project.title}
                                 className="h-full w-full object-cover"
                             />

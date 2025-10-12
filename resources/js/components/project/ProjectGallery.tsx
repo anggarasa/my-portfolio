@@ -72,7 +72,11 @@ export default function ProjectGallery({
                                 onClick={() => openLightbox(index)}
                             >
                                 <img
-                                    src={image}
+                                    src={
+                                        image.startsWith('http')
+                                            ? image
+                                            : `/storage/projects/${image}`
+                                    }
                                     alt={`${projectTitle} - Screenshot ${index + 1}`}
                                     className="h-full w-full object-cover"
                                 />
@@ -127,7 +131,11 @@ export default function ProjectGallery({
 
                         {/* Image */}
                         <img
-                            src={images[selectedImage]}
+                            src={
+                                images[selectedImage].startsWith('http')
+                                    ? images[selectedImage]
+                                    : `/storage/projects/${images[selectedImage]}`
+                            }
                             alt={`${projectTitle} - Screenshot ${selectedImage + 1}`}
                             className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
                         />

@@ -64,4 +64,28 @@ class Project extends Model
     {
         return $query->orderBy('sort_order')->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Get the image URL attribute
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            return asset('storage/projects/' . $this->image);
+        }
+        return null;
+    }
+
+    /**
+     * Get the images URLs attribute
+     */
+    public function getImagesUrlsAttribute()
+    {
+        if ($this->images) {
+            return array_map(function ($image) {
+                return asset('storage/projects/' . $image);
+            }, $this->images);
+        }
+        return [];
+    }
 }

@@ -19,7 +19,9 @@ interface Project {
     description: string;
     long_description: string;
     image: string;
+    image_url?: string;
     images: string[];
+    images_urls?: string[];
     technologies: string[];
     category: string;
     github_url: string;
@@ -139,7 +141,10 @@ export default function ProjectsShow({ project }: Props) {
                                 <CardContent className="p-0">
                                     <div className="relative overflow-hidden rounded-lg">
                                         <img
-                                            src={project.image}
+                                            src={
+                                                project.image_url ||
+                                                `/storage/projects/${project.image}`
+                                            }
                                             alt={project.title}
                                             className="h-64 w-full object-cover"
                                         />

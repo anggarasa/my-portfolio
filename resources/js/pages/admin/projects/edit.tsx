@@ -28,7 +28,9 @@ interface Project {
     description: string;
     long_description: string;
     image: string;
+    image_url?: string;
     images: string[];
+    images_urls?: string[];
     technologies: string[];
     category: string;
     github_url: string;
@@ -52,26 +54,26 @@ interface Props {
 
 export default function ProjectsEdit({ project }: Props) {
     const { data, setData, put, processing, errors } = (useForm as any)({
-        title: project.title,
-        description: project.description,
-        long_description: project.long_description,
-        image: project.image,
-        images: project.images || [],
+        title: project.title || '',
+        description: project.description || '',
+        long_description: project.long_description || '',
+        image: null, // File upload field
+        images: [] as File[], // File upload field for additional images
         technologies: project.technologies || [],
-        category: project.category,
-        github_url: project.github_url,
-        live_url: project.live_url,
-        duration: project.duration,
-        year: project.year,
-        role: project.role,
+        category: project.category || '',
+        github_url: project.github_url || '',
+        live_url: project.live_url || '',
+        duration: project.duration || '',
+        year: project.year || '',
+        role: project.role || '',
         challenges: project.challenges || [],
         solutions: project.solutions || [],
         features: project.features || [],
         demo_accounts: project.demo_accounts || [],
         testimonial: project.testimonial || {},
-        status: project.status,
-        sort_order: project.sort_order,
-        featured: project.featured,
+        status: project.status || 'draft',
+        sort_order: project.sort_order || 0,
+        featured: project.featured || false,
     });
 
     const [newImage, setNewImage] = useState('');
@@ -79,10 +81,48 @@ export default function ProjectsEdit({ project }: Props) {
     const [newChallenge, setNewChallenge] = useState('');
     const [newSolution, setNewSolution] = useState('');
     const [newFeature, setNewFeature] = useState('');
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [additionalImagePreviews, setAdditionalImagePreviews] = useState<
+        string[]
+    >([]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(`/admin/projects/${project.id}`);
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setData('image', file);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setImagePreview(null);
+        }
+    };
+
+    const handleAdditionalImageChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const files = Array.from(e.target.files || []);
+        setData('images', files);
+
+        const newPreviews: string[] = [];
+        files.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                newPreviews.push(e.target?.result as string);
+                if (newPreviews.length === files.length) {
+                    setAdditionalImagePreviews(newPreviews);
+                }
+            };
+            reader.readAsDataURL(file);
+        });
     };
 
     const addToArray = (field: string, value: string) => {
@@ -283,65 +323,74 @@ export default function ProjectsEdit({ project }: Props) {
                         </CardHeader>
                         <CardContent className="space-y-4 p-6">
                             <div className="space-y-2">
-                                <Label htmlFor="image">Main Image URL</Label>
+                                <Label htmlFor="image">Main Image</Label>
+                                {project.image && (
+                                    <div className="mb-2">
+                                        <p className="mb-2 text-sm text-gray-600">
+                                            Current image:
+                                        </p>
+                                        <img
+                                            src={
+                                                project.image_url ||
+                                                `/storage/projects/${project.image}`
+                                            }
+                                            alt="Current project image"
+                                            className="h-32 w-32 rounded-lg border object-cover"
+                                        />
+                                    </div>
+                                )}
                                 <Input
                                     id="image"
-                                    value={data.image}
-                                    onChange={(e) =>
-                                        setData('image', e.target.value)
-                                    }
-                                    placeholder="https://example.com/image.png"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
                                 />
+                                {imagePreview && (
+                                    <div className="mt-2">
+                                        <p className="mb-2 text-sm text-gray-600">
+                                            New image preview:
+                                        </p>
+                                        <img
+                                            src={imagePreview}
+                                            alt="New image preview"
+                                            className="h-32 w-32 rounded-lg border object-cover"
+                                        />
+                                    </div>
+                                )}
+                                {errors.image && (
+                                    <p className="text-sm text-red-600">
+                                        {errors.image}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-2">
                                 <Label>Additional Images</Label>
-                                <div className="flex gap-2">
-                                    <Input
-                                        value={newImage}
-                                        onChange={(e) =>
-                                            setNewImage(e.target.value)
-                                        }
-                                        placeholder="Image URL"
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => {
-                                            addToArray('images', newImage);
-                                            setNewImage('');
-                                        }}
-                                    >
-                                        Add
-                                    </Button>
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {data.images.map(
-                                        (image: string, index: number) => (
-                                            <div
-                                                key={index}
-                                                className="flex items-center gap-2 rounded-md bg-muted px-3 py-1"
-                                            >
-                                                <span className="text-sm">
-                                                    {image}
-                                                </span>
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        removeFromArray(
-                                                            'images',
-                                                            index,
-                                                        )
-                                                    }
-                                                >
-                                                    ×
-                                                </Button>
-                                            </div>
-                                        ),
-                                    )}
-                                </div>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleAdditionalImageChange}
+                                />
+                                {additionalImagePreviews.length > 0 && (
+                                    <div className="mt-2">
+                                        <p className="mb-2 text-sm text-gray-600">
+                                            New images preview:
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {additionalImagePreviews.map(
+                                                (preview, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={preview}
+                                                        alt={`Additional image ${index + 1}`}
+                                                        className="h-24 w-24 rounded-lg border object-cover"
+                                                    />
+                                                ),
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>

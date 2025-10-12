@@ -31,8 +31,8 @@ export default function ProjectsCreate({}: Props) {
         title: string;
         description: string;
         long_description: string;
-        image: string;
-        images: string[];
+        image: File | null;
+        images: File[];
         technologies: string[];
         category: string;
         github_url: string;
@@ -52,21 +52,21 @@ export default function ProjectsCreate({}: Props) {
         title: '',
         description: '',
         long_description: '',
-        image: '',
-        images: [] as string[],
-        technologies: [] as string[],
+        image: null,
+        images: [],
+        technologies: [],
         category: '',
         github_url: '',
         live_url: '',
         duration: '',
         year: '',
         role: '',
-        challenges: [] as string[],
-        solutions: [] as string[],
-        features: [] as string[],
-        demo_accounts: [] as Record<string, any>[],
-        testimonial: {} as Record<string, any>,
-        status: 'draft' as 'draft' | 'published' | 'archived',
+        challenges: [],
+        solutions: [],
+        features: [],
+        demo_accounts: [],
+        testimonial: {},
+        status: 'draft',
         sort_order: 0,
         featured: false,
     });
@@ -76,10 +76,48 @@ export default function ProjectsCreate({}: Props) {
     const [newChallenge, setNewChallenge] = useState('');
     const [newSolution, setNewSolution] = useState('');
     const [newFeature, setNewFeature] = useState('');
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [additionalImagePreviews, setAdditionalImagePreviews] = useState<
+        string[]
+    >([]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post('/admin/projects');
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setData('image', file);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setImagePreview(null);
+        }
+    };
+
+    const handleAdditionalImageChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const files = Array.from(e.target.files || []);
+        setData('images', files);
+
+        const newPreviews: string[] = [];
+        files.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                newPreviews.push(e.target?.result as string);
+                if (newPreviews.length === files.length) {
+                    setAdditionalImagePreviews(newPreviews);
+                }
+            };
+            reader.readAsDataURL(file);
+        });
     };
 
     const addToArray = (field: string, value: string) => {
@@ -271,63 +309,59 @@ export default function ProjectsCreate({}: Props) {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="image">Main Image URL</Label>
+                                <Label htmlFor="image">Main Image</Label>
                                 <Input
                                     id="image"
-                                    value={data.image}
-                                    onChange={(e) =>
-                                        setData('image', e.target.value)
-                                    }
-                                    placeholder="https://example.com/image.png"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
                                 />
+                                {imagePreview && (
+                                    <div className="mt-2">
+                                        <p className="mb-2 text-sm text-gray-600">
+                                            Preview:
+                                        </p>
+                                        <img
+                                            src={imagePreview}
+                                            alt="Image preview"
+                                            className="h-32 w-32 rounded-lg border object-cover"
+                                        />
+                                    </div>
+                                )}
+                                {errors.image && (
+                                    <p className="text-sm text-red-600">
+                                        {errors.image}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-2">
                                 <Label>Additional Images</Label>
-                                <div className="flex gap-2">
-                                    <Input
-                                        value={newImage}
-                                        onChange={(e) =>
-                                            setNewImage(e.target.value)
-                                        }
-                                        placeholder="Image URL"
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => {
-                                            addToArray('images', newImage);
-                                            setNewImage('');
-                                        }}
-                                    >
-                                        Add
-                                    </Button>
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {data.images.map((image, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex items-center gap-2 rounded-md bg-muted px-3 py-1"
-                                        >
-                                            <span className="text-sm">
-                                                {image}
-                                            </span>
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() =>
-                                                    removeFromArray(
-                                                        'images',
-                                                        index,
-                                                    )
-                                                }
-                                            >
-                                                ×
-                                            </Button>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleAdditionalImageChange}
+                                />
+                                {additionalImagePreviews.length > 0 && (
+                                    <div className="mt-2">
+                                        <p className="mb-2 text-sm text-gray-600">
+                                            Previews:
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {additionalImagePreviews.map(
+                                                (preview, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={preview}
+                                                        alt={`Additional image ${index + 1}`}
+                                                        className="h-24 w-24 rounded-lg border object-cover"
+                                                    />
+                                                ),
+                                            )}
                                         </div>
-                                    ))}
-                                </div>
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
