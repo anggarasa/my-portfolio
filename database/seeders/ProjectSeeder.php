@@ -18,11 +18,11 @@ class ProjectSeeder extends Seeder
                 'title' => 'ThreadLoop',
                 'description' => 'A modern social media platform built with Laravel and Livewire, enabling users to share content, interact, and connect with others worldwide.',
                 'long_description' => 'ThreadLoop is a comprehensive social media platform that revolutionizes digital communication and content sharing. Built with Laravel 12 and Livewire, it provides real-time interactions, advanced content management, and robust social features. The platform supports text posts, images, and videos with intelligent algorithms and comprehensive user management. Features include a weighted feed algorithm, Cloudinary integration for media optimization, and comprehensive security with two-factor authentication.',
-                'image' => '/assets/images/img_threadloop.png',
+                'image' => 'img_threadloop.png',
                 'images' => [
-                    '/assets/images/img_threadloop_1.png',
-                    '/assets/images/img_threadloop_2.png',
-                    '/assets/images/img_threadloop_3.png'
+                    'img_threadloop_1.png',
+                    'img_threadloop_2.png',
+                    'img_threadloop_3.png'
                 ],
                 'technologies' => ['Laravel 12', 'Livewire', 'Tailwind CSS 4', 'MySQL', 'Cloudinary'],
                 'category' => 'Web App',
@@ -74,11 +74,11 @@ class ProjectSeeder extends Seeder
                 'title' => 'Website Kasir',
                 'description' => 'A comprehensive cashier system built with Laravel 12 and modern technologies to support business operational efficiency and ease of use.',
                 'long_description' => 'Website Kasir is a comprehensive point-of-sale (POS) system designed to enhance business operational efficiency. Built with modern Laravel 12 technology, this system provides a complete solution for managing sales, inventory, customers, and financial reports. With its intuitive interface and role-based access control system, businesses can easily manage their operations and make data-driven decisions. The system supports multi-user functionality with different access levels for Super Admin and Admin roles, ensuring optimal security and control.',
-                'image' => '/assets/images/img_web_kasir.png',
+                'image' => 'img_web_kasir.png',
                 'images' => [
-                    '/assets/images/img_web_kasir_1.png',
-                    '/assets/images/img_web_kasir_2.png',
-                    '/assets/images/img_web_kasir_3.png'
+                    'img_web_kasir_1.png',
+                    'img_web_kasir_2.png',
+                    'img_web_kasir_3.png'
                 ],
                 'technologies' => ['Laravel 12', 'Livewire 3', 'TailwindCSS 4', 'MySQL'],
                 'category' => 'Web App',
@@ -134,11 +134,11 @@ class ProjectSeeder extends Seeder
                 'title' => 'AppSos API',
                 'description' => 'REST API for social media applications with authentication, posting, comments, likes, and notifications.',
                 'long_description' => 'AppSos API is a comprehensive backend solution for social media platforms. Built with Node.js, Express, TypeScript, and Prisma, it provides essential social media features including user authentication, post management, social interactions, and real-time notifications. The API includes secure file uploads and comprehensive documentation for easy integration.',
-                'image' => '/assets/images/img_appsos_api.png',
+                'image' => 'img_appsos_api.png',
                 'images' => [
-                    '/assets/images/img_appsos_api_1.png',
-                    '/assets/images/img_appsos_api_2.png',
-                    '/assets/images/img_appsos_api_3.png'
+                    'img_appsos_api_1.png',
+                    'img_appsos_api_2.png',
+                    'img_appsos_api_3.png'
                 ],
                 'technologies' => ['Node.js', 'Express.js', 'TypeScript', 'PostgreSQL', 'Prisma', 'JWT', 'Supabase'],
                 'category' => 'Back End',

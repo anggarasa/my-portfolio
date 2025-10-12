@@ -237,18 +237,11 @@ class ProjectController extends Controller
     }
 
     /**
-     * Get projects for portfolio display
+     * Display welcome page with projects
      */
-    public function portfolio(Request $request)
+    public function welcome()
     {
-        $query = Project::published()->ordered();
-
-        // Filter by category
-        if ($request->has('category') && $request->category !== 'All') {
-            $query->byCategory($request->category);
-        }
-
-        $projects = $query->get();
+        $projects = Project::published()->ordered()->get();
 
         // Transform projects to include proper image URLs
         $projects->transform(function ($project) {
@@ -257,7 +250,9 @@ class ProjectController extends Controller
             return $project;
         });
 
-        return response()->json($projects);
+        return Inertia::render('welcome', [
+            'projects' => $projects,
+        ]);
     }
 
     /**

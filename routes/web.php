@@ -6,13 +6,7 @@ use App\Http\Controllers\ReplyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
-
-
-// Portfolio routes
-Route::get('/api/projects', [App\Http\Controllers\ProjectController::class, 'portfolio'])->name('api.projects');
+Route::get('/', [App\Http\Controllers\ProjectController::class, 'welcome'])->name('home');
 Route::get('/project/{project}', [App\Http\Controllers\ProjectController::class, 'portfolioDetail'])->name('project.detail');
 
 // Contact form route

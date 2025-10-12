@@ -14,7 +14,23 @@ import { useEffect } from 'react';
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Welcome() {
+interface Project {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    image_url?: string;
+    technologies: string[];
+    category: string;
+    github_url: string;
+    live_url: string;
+}
+
+interface Props {
+    projects: Project[];
+}
+
+export default function Welcome({ projects }: Props) {
     useEffect(() => {
         // GSAP Animations
         const tl = gsap.timeline();
@@ -108,7 +124,7 @@ export default function Welcome() {
                     <HeroSection />
                     <AboutSection />
                     <ServicesSection />
-                    <ProjectsSection />
+                    <ProjectsSection projects={projects} />
                     <ContactSection />
                 </main>
                 <Footer />

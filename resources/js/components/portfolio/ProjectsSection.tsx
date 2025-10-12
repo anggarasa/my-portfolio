@@ -22,39 +22,27 @@ interface Project {
     live_url: string;
 }
 
-export default function ProjectsSection() {
+interface Props {
+    projects: Project[];
+}
+
+export default function ProjectsSection({ projects }: Props) {
     const [activeCategory, setActiveCategory] = useState('All');
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState<string[]>(['All']);
 
     useEffect(() => {
-        fetchProjects();
-    }, [activeCategory]);
+        // Extract unique categories from projects
+        const uniqueCategories = [
+            'All',
+            ...new Set(projects.map((project: Project) => project.category)),
+        ];
+        setCategories(uniqueCategories as string[]);
+    }, [projects]);
 
-    const fetchProjects = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(
-                `/api/projects?category=${activeCategory === 'All' ? '' : activeCategory}`,
-            );
-            const data = await response.json();
-            setProjects(data);
-
-            // Extract unique categories
-            const uniqueCategories = [
-                'All',
-                ...new Set(data.map((project: Project) => project.category)),
-            ];
-            setCategories(uniqueCategories as string[]);
-        } catch (error) {
-            console.error('Error fetching projects:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const filteredProjects = projects;
+    const filteredProjects =
+        activeCategory === 'All'
+            ? projects
+            : projects.filter((project) => project.category === activeCategory);
 
     return (
         <section
@@ -97,19 +85,7 @@ export default function ProjectsSection() {
                 </div>
 
                 {/* Projects Grid */}
-                {loading ? (
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <div className="mb-6 rounded-full bg-muted p-6">
-                            <div className="h-16 w-16 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-                        </div>
-                        <h3 className="mb-2 text-xl font-semibold">
-                            Loading Projects...
-                        </h3>
-                        <p className="text-center text-muted-foreground">
-                            Please wait while we fetch your projects.
-                        </p>
-                    </div>
-                ) : filteredProjects.length > 0 ? (
+                {filteredProjects.length > 0 ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {filteredProjects.map((project) => (
                             <Card
