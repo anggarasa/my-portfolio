@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useState } from 'react';
 
@@ -88,7 +88,25 @@ export default function ProjectsEdit({ project }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/admin/projects/${project.id}`);
+
+        // Use router.post for file uploads with _method override
+        router.post(
+            `/admin/projects/${project.id}`,
+            {
+                ...data,
+                _method: 'PUT',
+            },
+            {
+                forceFormData: true,
+                onSuccess: () => {
+                    // Optional: Handle success
+                },
+                onError: (errors) => {
+                    // Optional: Handle errors
+                    console.error('Form errors:', errors);
+                },
+            },
+        );
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,7 +205,11 @@ export default function ProjectsEdit({ project }: Props) {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form
+                    onSubmit={handleSubmit}
+                    className="space-y-6"
+                    encType="multipart/form-data"
+                >
                     {/* Basic Information */}
                     <Card className="border-0 shadow-lg">
                         <CardHeader className="border-b bg-muted/30">
