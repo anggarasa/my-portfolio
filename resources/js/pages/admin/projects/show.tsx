@@ -126,7 +126,7 @@ export default function ProjectsShow({ project }: Props) {
 
     return (
         <AppSidebarLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${project.title} - Project Details`} />
+            <Head title={`${project.title}`} />
 
             <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
                 <div className="space-y-8 p-6">

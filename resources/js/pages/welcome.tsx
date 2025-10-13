@@ -110,7 +110,7 @@ export default function Welcome({ projects }: Props) {
 
     return (
         <>
-            <Head title="Portfolio - My Name">
+            <Head title="Portfolio">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link
                     href="https://fonts.bunny.net/css?family=inter:400,500,600,700"

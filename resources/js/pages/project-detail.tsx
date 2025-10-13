@@ -110,7 +110,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
     return (
         <>
-            <Head title={`${project.title} - Project Detail`}>
+            <Head title={`${project.title}`}>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link
                     href="https://fonts.bunny.net/css?family=inter:400,500,600,700"

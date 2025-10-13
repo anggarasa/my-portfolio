@@ -333,7 +333,7 @@ export default function PerformanceDashboard({
                                         .map((operation, index) => (
                                             <div
                                                 key={index}
-                                                className="flex items-center justify-between rounded bg-gray-50 p-2"
+                                                className="flex items-center justify-between rounded border-b border-accent bg-card p-2"
                                             >
                                                 <div>
                                                     <div className="font-medium">
