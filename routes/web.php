@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PerformanceController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -12,10 +15,15 @@ Route::get('/project/{project}', [App\Http\Controllers\ProjectController::class,
 // Contact form route
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
+// SEO Routes
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
+
+// Health Check Route (public)
+Route::get('/health', [PerformanceController::class, 'health'])->name('health');
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Admin Routes
     Route::prefix('admin')->name('admin.')->group(function () {
@@ -36,6 +44,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Project Management Routes
         Route::resource('projects', ProjectController::class);
+
+        // Performance Monitoring Routes
+        Route::get('performance', [PerformanceController::class, 'dashboard'])->name('performance.dashboard');
+        Route::get('performance/metrics', [PerformanceController::class, 'metrics'])->name('performance.metrics');
+        Route::post('performance/log', [PerformanceController::class, 'logMetrics'])->name('performance.log');
     });
 });
 

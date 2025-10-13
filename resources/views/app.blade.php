@@ -32,6 +32,26 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- SEO Meta Tags --}}
+        @if(isset($seo))
+            {!! app(\App\Services\SeoService::class)->renderMetaTags($seo['meta']) !!}
+
+            {{-- Structured Data --}}
+            @if(isset($seo['structured_data']))
+                {!! app(\App\Services\SeoService::class)->renderStructuredData($seo['structured_data']) !!}
+            @endif
+
+            {{-- Website Structured Data --}}
+            @if(isset($seo['website_structured_data']))
+                {!! app(\App\Services\SeoService::class)->renderStructuredData($seo['website_structured_data']) !!}
+            @endif
+        @endif
+
+        {{-- Google Analytics --}}
+        @if(app(\App\Services\AnalyticsService::class)->isEnabled())
+            {!! app(\App\Services\AnalyticsService::class)->renderGoogleAnalytics() !!}
+        @endif
+
         <link rel="icon" href="/assets/icons/ic_logo_favicon.png" sizes="any">
         <link rel="icon" href="/assets/icons/ic_logo_favicon.png" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/assets/icons/ic_logo_favicon.png">
@@ -44,6 +64,11 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
+        {{-- Google Tag Manager (noscript) --}}
+        @if(app(\App\Services\AnalyticsService::class)->isEnabled())
+            {!! app(\App\Services\AnalyticsService::class)->renderGTMBody() !!}
+        @endif
+
         @inertia
 
         <!-- Toast Container -->

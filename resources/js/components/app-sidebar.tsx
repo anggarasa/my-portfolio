@@ -13,7 +13,14 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Briefcase, Folder, LayoutGrid, Mail } from 'lucide-react';
+import {
+    Activity,
+    BookOpen,
+    Briefcase,
+    Folder,
+    LayoutGrid,
+    Mail,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -31,6 +38,11 @@ const mainNavItems: NavItem[] = [
         title: 'Contact Messages',
         href: '/admin/contacts',
         icon: Mail,
+    },
+    {
+        title: 'Performance',
+        href: '/admin/performance',
+        icon: Activity,
     },
 ];
 

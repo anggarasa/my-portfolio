@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAnalytics } from '@/hooks/use-analytics';
 import { useToast } from '@/hooks/use-toast';
 import contact from '@/routes/contact';
 import { useForm } from '@inertiajs/react';
@@ -16,6 +17,7 @@ import { useEffect } from 'react';
 
 export default function ContactSection() {
     const { showSuccess, showError } = useToast();
+    const { trackContactFormSubmission, trackExternalLink } = useAnalytics();
 
     const {
         data,
@@ -37,8 +39,10 @@ export default function ContactSection() {
             showSuccess(
                 'Your message has been sent successfully! I will respond as soon as possible.',
             );
+            // Track successful form submission
+            trackContactFormSubmission();
         }
-    }, [recentlySuccessful, showSuccess]);
+    }, [recentlySuccessful, showSuccess, trackContactFormSubmission]);
 
     // Show error toast if there are general errors (not field-specific)
     useEffect(() => {
@@ -148,6 +152,12 @@ export default function ContactSection() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 aria-label={social.label}
+                                                onClick={() =>
+                                                    trackExternalLink(
+                                                        social.href,
+                                                        social.label,
+                                                    )
+                                                }
                                             >
                                                 <social.icon className="h-4 w-4 text-muted-foreground" />
                                             </a>

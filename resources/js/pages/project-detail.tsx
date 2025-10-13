@@ -6,6 +6,11 @@ import ProjectGallery from '@/components/project/ProjectGallery';
 import ProjectHeader from '@/components/project/ProjectHeader';
 import ProjectHero from '@/components/project/ProjectHero';
 import ProjectOverview from '@/components/project/ProjectOverview';
+import {
+    useAnalytics,
+    useScrollTracking,
+    useTimeTracking,
+} from '@/hooks/use-analytics';
 import { Head } from '@inertiajs/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -47,6 +52,17 @@ interface ProjectDetailProps {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
+    const { trackProjectView } = useAnalytics();
+
+    // Track analytics
+    useScrollTracking();
+    useTimeTracking();
+
+    useEffect(() => {
+        // Track project view
+        trackProjectView(project.title, project.id);
+    }, [project.id, project.title, trackProjectView]);
+
     useEffect(() => {
         // GSAP Animations
         const tl = gsap.timeline();
