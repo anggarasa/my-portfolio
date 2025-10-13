@@ -4,13 +4,31 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link } from '@inertiajs/react';
 import {
+    AlertTriangle,
     ArrowLeft,
+    Award,
     Calendar,
+    CheckCircle,
     Clock,
+    Code,
+    Copy,
     Edit,
     ExternalLink,
+    Eye,
     Github,
+    Globe,
+    Image as ImageIcon,
+    Layers,
+    Lightbulb,
+    MessageSquare,
+    Shield,
+    Star,
+    Tag,
+    Target,
+    TrendingUp,
     User,
+    Users,
+    Zap,
 } from 'lucide-react';
 
 interface Project {
@@ -88,8 +106,6 @@ export default function ProjectsShow({ project }: Props) {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
         });
     };
 
@@ -97,454 +113,850 @@ export default function ProjectsShow({ project }: Props) {
         <AppSidebarLayout breadcrumbs={breadcrumbs}>
             <Head title={`${project.title} - Project Details`} />
 
-            <div className="space-y-6 p-4">
-                {/* Header Section */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-3">
-                            <h1 className="text-3xl font-bold tracking-tight">
-                                {project.title}
-                            </h1>
-                            {project.featured && (
-                                <Badge variant="secondary">Featured</Badge>
-                            )}
-                            <Badge className={getStatusColor(project.status)}>
-                                {project.status}
-                            </Badge>
-                        </div>
-                        <p className="text-muted-foreground">
-                            {project.description}
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Button variant="outline" size="sm" asChild>
-                            <Link href={'/admin/projects'}>
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to Projects
-                            </Link>
-                        </Button>
-                        <Button size="sm" asChild>
-                            <Link href={`/admin/projects/${project.id}/edit`}>
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit Project
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    {/* Main Content */}
-                    <div className="space-y-6 lg:col-span-2">
-                        {/* Project Image */}
-                        {project.image && (
-                            <Card className="border-0 shadow-lg">
-                                <CardContent className="p-0">
-                                    <div className="relative overflow-hidden rounded-lg">
-                                        <img
-                                            src={
-                                                project.image_url ||
-                                                `/storage/projects/${project.image}`
-                                            }
-                                            alt={project.title}
-                                            className="h-64 w-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
-
-                        {/* Project Details */}
-                        <Card className="border-0 shadow-lg">
-                            <CardHeader className="border-b bg-muted/30">
-                                <CardTitle className="flex items-center gap-2 text-xl">
-                                    <User className="h-5 w-5" />
-                                    Project Details
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <div className="space-y-6">
-                                    {/* Long Description */}
-                                    {project.long_description && (
+            <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+                <div className="space-y-8 p-6">
+                    {/* Modern Header Section */}
+                    <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-r from-primary/5 via-primary/10 to-secondary/5 p-8">
+                        <div className="bg-grid-pattern absolute inset-0 opacity-5"></div>
+                        <div className="relative">
+                            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                                <div className="flex-1 space-y-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-lg">
+                                            <Layers className="h-8 w-8" />
+                                        </div>
                                         <div className="space-y-2">
-                                            <h3 className="text-lg font-semibold">
-                                                Description
-                                            </h3>
-                                            <p className="whitespace-pre-wrap text-muted-foreground">
-                                                {project.long_description}
+                                            <div className="flex flex-wrap items-center gap-3">
+                                                <h1 className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent">
+                                                    {project.title}
+                                                </h1>
+                                                {project.featured && (
+                                                    <Badge className="border-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
+                                                        <Star className="mr-1 h-3 w-3" />
+                                                        Featured
+                                                    </Badge>
+                                                )}
+                                                <Badge
+                                                    className={`${getStatusColor(project.status)} border-0 shadow-sm`}
+                                                >
+                                                    {project.status}
+                                                </Badge>
+                                            </div>
+                                            <p className="max-w-2xl text-lg text-muted-foreground">
+                                                {project.description}
                                             </p>
                                         </div>
-                                    )}
+                                    </div>
 
-                                    {/* Technologies */}
-                                    {project.technologies &&
-                                        project.technologies.length > 0 && (
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-semibold">
-                                                    Technologies Used
-                                                </h3>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {project.technologies.map(
-                                                        (tech) => (
-                                                            <Badge
-                                                                key={tech}
-                                                                variant="outline"
-                                                                className="px-3 py-1"
-                                                            >
-                                                                {tech}
-                                                            </Badge>
-                                                        ),
-                                                    )}
+                                    {/* Quick Stats */}
+                                    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                                        <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-background/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                <Tag className="h-4 w-4 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Category
+                                                </p>
+                                                <p className="font-semibold">
+                                                    {project.category}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-background/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                <User className="h-4 w-4 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Role
+                                                </p>
+                                                <p className="font-semibold">
+                                                    {project.role}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-background/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                <Calendar className="h-4 w-4 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Year
+                                                </p>
+                                                <p className="font-semibold">
+                                                    {project.year}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-background/80 px-4 py-3 shadow-sm backdrop-blur-sm">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                <Clock className="h-4 w-4 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Duration
+                                                </p>
+                                                <p className="font-semibold">
+                                                    {project.duration}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-3">
+                                    <Button
+                                        variant="outline"
+                                        size="lg"
+                                        asChild
+                                        className="shadow-lg transition-all duration-200 hover:shadow-xl"
+                                    >
+                                        <Link href={'/admin/projects'}>
+                                            <ArrowLeft className="mr-2 h-5 w-5" />
+                                            Back to Projects
+                                        </Link>
+                                    </Button>
+                                    <Button
+                                        size="lg"
+                                        asChild
+                                        className="shadow-lg transition-all duration-200 hover:shadow-xl"
+                                    >
+                                        <Link
+                                            href={`/admin/projects/${project.id}/edit`}
+                                        >
+                                            <Edit className="mr-2 h-5 w-5" />
+                                            Edit Project
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
+                        {/* Main Content */}
+                        <div className="space-y-8 xl:col-span-2">
+                            {/* Project Images Gallery */}
+                            <div className="space-y-6">
+                                {/* Main Project Image */}
+                                {project.image && (
+                                    <Card className="overflow-hidden border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                        <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                            <CardTitle className="flex items-center gap-2 text-xl">
+                                                <ImageIcon className="h-5 w-5 text-primary" />
+                                                Project Preview
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-0">
+                                            <div className="relative overflow-hidden">
+                                                <img
+                                                    src={
+                                                        project.image_url ||
+                                                        `/storage/projects/${project.image}`
+                                                    }
+                                                    alt={project.title}
+                                                    className="h-80 w-full object-cover transition-transform duration-300 hover:scale-105"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                                                <div className="absolute right-4 bottom-4 left-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <Eye className="h-4 w-4 text-white" />
+                                                        <span className="text-sm font-medium text-white">
+                                                            Main Project Image
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        )}
+                                        </CardContent>
+                                    </Card>
+                                )}
 
-                                    {/* Features */}
-                                    {project.features &&
-                                        project.features.length > 0 && (
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-semibold">
-                                                    Features
-                                                </h3>
-                                                <ul className="space-y-2">
-                                                    {project.features.map(
-                                                        (feature, index) => (
-                                                            <li
-                                                                key={index}
-                                                                className="flex items-start gap-2"
-                                                            >
-                                                                <span className="mt-1 text-primary">
-                                                                    •
-                                                                </span>
-                                                                <span className="text-muted-foreground">
-                                                                    {feature}
-                                                                </span>
-                                                            </li>
-                                                        ),
-                                                    )}
-                                                </ul>
-                                            </div>
-                                        )}
-
-                                    {/* Challenges & Solutions */}
-                                    {project.challenges &&
-                                        project.challenges.length > 0 && (
-                                            <div className="space-y-4">
-                                                <h3 className="text-lg font-semibold">
-                                                    Challenges & Solutions
-                                                </h3>
-                                                <div className="space-y-4">
-                                                    {project.challenges.map(
-                                                        (challenge, index) => (
+                                {/* Additional Images */}
+                                {project.images &&
+                                    project.images.length > 0 && (
+                                        <Card className="border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                            <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                                <CardTitle className="flex items-center gap-2 text-xl">
+                                                    <ImageIcon className="h-5 w-5 text-primary" />
+                                                    Additional Images (
+                                                    {project.images.length})
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="p-6">
+                                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                    {project.images.map(
+                                                        (image, index) => (
                                                             <div
                                                                 key={index}
-                                                                className="rounded-lg border p-4"
+                                                                className="relative overflow-hidden rounded-lg border border-border/50"
                                                             >
-                                                                <div className="space-y-2">
-                                                                    <h4 className="font-medium text-destructive">
-                                                                        Challenge
-                                                                    </h4>
-                                                                    <p className="text-sm text-muted-foreground">
-                                                                        {
-                                                                            challenge
-                                                                        }
-                                                                    </p>
+                                                                <img
+                                                                    src={
+                                                                        project
+                                                                            .images_urls?.[
+                                                                            index
+                                                                        ] ||
+                                                                        `/storage/projects/${image}`
+                                                                    }
+                                                                    alt={`${project.title} - Image ${index + 1}`}
+                                                                    className="h-48 w-full object-cover transition-transform duration-300 hover:scale-105"
+                                                                />
+                                                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                                                                <div className="absolute bottom-2 left-2">
+                                                                    <Badge
+                                                                        variant="secondary"
+                                                                        className="border-0 bg-black/50 text-white"
+                                                                    >
+                                                                        Image{' '}
+                                                                        {index +
+                                                                            1}
+                                                                    </Badge>
                                                                 </div>
-                                                                {project.solutions &&
-                                                                    project
-                                                                        .solutions[
-                                                                        index
-                                                                    ] && (
-                                                                        <div className="space-y-2">
-                                                                            <h4 className="font-medium text-green-600">
-                                                                                Solution
-                                                                            </h4>
-                                                                            <p className="text-sm text-muted-foreground">
-                                                                                {
-                                                                                    project
-                                                                                        .solutions[
-                                                                                        index
-                                                                                    ]
-                                                                                }
-                                                                            </p>
-                                                                        </div>
-                                                                    )}
                                                             </div>
                                                         ),
                                                     )}
                                                 </div>
+                                            </CardContent>
+                                        </Card>
+                                    )}
+                            </div>
+
+                            {/* Project Details */}
+                            <Card className="border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                    <CardTitle className="flex items-center gap-2 text-xl">
+                                        <Layers className="h-5 w-5 text-primary" />
+                                        Project Details
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-6">
+                                    <div className="space-y-8">
+                                        {/* Long Description */}
+                                        {project.long_description && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                        <MessageSquare className="h-4 w-4 text-primary" />
+                                                    </div>
+                                                    <h3 className="text-xl font-semibold">
+                                                        Description
+                                                    </h3>
+                                                </div>
+                                                <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
+                                                    <p className="leading-relaxed whitespace-pre-wrap text-muted-foreground">
+                                                        {
+                                                            project.long_description
+                                                        }
+                                                    </p>
+                                                </div>
                                             </div>
                                         )}
 
-                                    {/* Demo Accounts */}
-                                    {project.demo_accounts &&
-                                        project.demo_accounts.length > 0 && (
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-semibold">
-                                                    Demo Accounts
-                                                </h3>
-                                                <div className="space-y-3">
-                                                    {project.demo_accounts.map(
-                                                        (account, index) => (
-                                                            <div
-                                                                key={index}
-                                                                className="rounded-lg border p-4"
-                                                            >
-                                                                <div className="space-y-2">
-                                                                    <div className="flex items-center gap-2">
-                                                                        <Badge variant="secondary">
+                                        {/* Technologies */}
+                                        {project.technologies &&
+                                            project.technologies.length > 0 && (
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                            <Code className="h-4 w-4 text-primary" />
+                                                        </div>
+                                                        <h3 className="text-xl font-semibold">
+                                                            Technologies Used
+                                                        </h3>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-3">
+                                                        {project.technologies.map(
+                                                            (tech) => (
+                                                                <Badge
+                                                                    key={tech}
+                                                                    variant="outline"
+                                                                    className="border-primary/20 bg-muted/50 px-4 py-2 text-foreground transition-colors hover:bg-primary/5"
+                                                                >
+                                                                    <Code className="mr-2 h-3 w-3" />
+                                                                    {tech}
+                                                                </Badge>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                        {/* Features */}
+                                        {project.features &&
+                                            project.features.length > 0 && (
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                            <CheckCircle className="h-4 w-4 text-primary" />
+                                                        </div>
+                                                        <h3 className="text-xl font-semibold">
+                                                            Key Features
+                                                        </h3>
+                                                    </div>
+                                                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                                        {project.features.map(
+                                                            (
+                                                                feature,
+                                                                index,
+                                                            ) => (
+                                                                <div
+                                                                    key={index}
+                                                                    className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/30 p-3"
+                                                                >
+                                                                    <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
+                                                                    <span className="text-muted-foreground">
+                                                                        {
+                                                                            feature
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                        {/* Challenges & Solutions */}
+                                        {project.challenges &&
+                                            project.challenges.length > 0 && (
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                            <Target className="h-4 w-4 text-primary" />
+                                                        </div>
+                                                        <h3 className="text-xl font-semibold">
+                                                            Challenges &
+                                                            Solutions
+                                                        </h3>
+                                                    </div>
+                                                    <div className="space-y-4">
+                                                        {project.challenges.map(
+                                                            (
+                                                                challenge,
+                                                                index,
+                                                            ) => (
+                                                                <div
+                                                                    key={index}
+                                                                    className="overflow-hidden rounded-lg border border-border/50"
+                                                                >
+                                                                    <div className="border-b border-border/50 bg-destructive/5 p-4">
+                                                                        <div className="mb-2 flex items-center gap-2">
+                                                                            <AlertTriangle className="h-4 w-4 text-destructive" />
+                                                                            <h4 className="font-semibold text-destructive">
+                                                                                Challenge{' '}
+                                                                                {index +
+                                                                                    1}
+                                                                            </h4>
+                                                                        </div>
+                                                                        <p className="text-muted-foreground">
+                                                                            {
+                                                                                challenge
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                    {project.solutions &&
+                                                                        project
+                                                                            .solutions[
+                                                                            index
+                                                                        ] && (
+                                                                            <div className="bg-green-50 p-4 dark:bg-green-950/20">
+                                                                                <div className="mb-2 flex items-center gap-2">
+                                                                                    <Lightbulb className="h-4 w-4 text-green-600" />
+                                                                                    <h4 className="font-semibold text-green-600">
+                                                                                        Solution
+                                                                                    </h4>
+                                                                                </div>
+                                                                                <p className="text-muted-foreground">
+                                                                                    {
+                                                                                        project
+                                                                                            .solutions[
+                                                                                            index
+                                                                                        ]
+                                                                                    }
+                                                                                </p>
+                                                                            </div>
+                                                                        )}
+                                                                </div>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                        {/* Demo Accounts */}
+                                        {project.demo_accounts &&
+                                            project.demo_accounts.length >
+                                                0 && (
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                            <Users className="h-4 w-4 text-primary" />
+                                                        </div>
+                                                        <h3 className="text-xl font-semibold">
+                                                            Demo Accounts
+                                                        </h3>
+                                                    </div>
+                                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                        {project.demo_accounts.map(
+                                                            (
+                                                                account,
+                                                                index,
+                                                            ) => (
+                                                                <div
+                                                                    key={index}
+                                                                    className="rounded-lg border border-border/50 bg-muted/30 p-4"
+                                                                >
+                                                                    <div className="mb-3 flex items-center gap-2">
+                                                                        <Badge className="border-primary/20 bg-primary/10 text-primary">
+                                                                            <Users className="mr-1 h-3 w-3" />
                                                                             {
                                                                                 account.role
                                                                             }
                                                                         </Badge>
                                                                     </div>
-                                                                    <div className="grid grid-cols-1 gap-2 text-sm">
-                                                                        <div>
-                                                                            <span className="font-medium">
+                                                                    <div className="space-y-3">
+                                                                        <div className="flex items-center justify-between rounded bg-background/50 p-2">
+                                                                            <span className="text-sm font-medium text-muted-foreground">
                                                                                 Email:
-                                                                            </span>{' '}
-                                                                            {
-                                                                                account.email
-                                                                            }
+                                                                            </span>
+                                                                            <div className="flex items-center gap-2">
+                                                                                <span className="font-mono text-sm">
+                                                                                    {
+                                                                                        account.email
+                                                                                    }
+                                                                                </span>
+                                                                                <Button
+                                                                                    variant="ghost"
+                                                                                    size="sm"
+                                                                                    className="h-6 w-6 p-0"
+                                                                                >
+                                                                                    <Copy className="h-3 w-3" />
+                                                                                </Button>
+                                                                            </div>
                                                                         </div>
-                                                                        <div>
-                                                                            <span className="font-medium">
+                                                                        <div className="flex items-center justify-between rounded bg-background/50 p-2">
+                                                                            <span className="text-sm font-medium text-muted-foreground">
                                                                                 Password:
-                                                                            </span>{' '}
-                                                                            {
-                                                                                account.password
-                                                                            }
+                                                                            </span>
+                                                                            <div className="flex items-center gap-2">
+                                                                                <span className="font-mono text-sm">
+                                                                                    {
+                                                                                        account.password
+                                                                                    }
+                                                                                </span>
+                                                                                <Button
+                                                                                    variant="ghost"
+                                                                                    size="sm"
+                                                                                    className="h-6 w-6 p-0"
+                                                                                >
+                                                                                    <Copy className="h-3 w-3" />
+                                                                                </Button>
+                                                                            </div>
                                                                         </div>
                                                                         {account.description && (
-                                                                            <div>
-                                                                                <span className="font-medium">
+                                                                            <div className="rounded bg-background/50 p-2">
+                                                                                <span className="text-sm font-medium text-muted-foreground">
                                                                                     Description:
-                                                                                </span>{' '}
-                                                                                {
-                                                                                    account.description
-                                                                                }
+                                                                                </span>
+                                                                                <p className="mt-1 text-sm text-muted-foreground">
+                                                                                    {
+                                                                                        account.description
+                                                                                    }
+                                                                                </p>
                                                                             </div>
                                                                         )}
                                                                     </div>
                                                                 </div>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                        {/* Testimonial */}
+                                        {project.testimonial && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                        <MessageSquare className="h-4 w-4 text-primary" />
+                                                    </div>
+                                                    <h3 className="text-xl font-semibold">
+                                                        Client Testimonial
+                                                    </h3>
+                                                </div>
+                                                <div className="rounded-lg border border-border/50 bg-gradient-to-br from-muted/30 to-muted/10 p-6">
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                                            <MessageSquare className="h-6 w-6" />
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <blockquote className="mb-4 text-lg leading-relaxed text-muted-foreground italic">
+                                                                "
+                                                                {
+                                                                    project
+                                                                        .testimonial
+                                                                        .text
+                                                                }
+                                                                "
+                                                            </blockquote>
+                                                            <div className="border-t border-border/50 pt-4">
+                                                                <div className="font-semibold text-foreground">
+                                                                    {
+                                                                        project
+                                                                            .testimonial
+                                                                            .author
+                                                                    }
+                                                                </div>
+                                                                <div className="text-muted-foreground">
+                                                                    {
+                                                                        project
+                                                                            .testimonial
+                                                                            .position
+                                                                    }
+                                                                </div>
                                                             </div>
-                                                        ),
-                                                    )}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
 
-                                    {/* Testimonial */}
-                                    {project.testimonial && (
-                                        <div className="space-y-3">
-                                            <h3 className="text-lg font-semibold">
-                                                Testimonial
-                                            </h3>
-                                            <div className="rounded-lg border bg-muted/30 p-4">
-                                                <blockquote className="text-muted-foreground italic">
-                                                    "{project.testimonial.text}"
-                                                </blockquote>
-                                                <div className="mt-3 text-sm">
-                                                    <div className="font-medium">
-                                                        {
-                                                            project.testimonial
-                                                                .author
-                                                        }
+                        {/* Sidebar */}
+                        <div className="space-y-6">
+                            {/* Project Links */}
+                            <Card className="border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                    <CardTitle className="flex items-center gap-2 text-xl">
+                                        <Globe className="h-5 w-5 text-primary" />
+                                        Project Links
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-6">
+                                    <div className="space-y-3">
+                                        {project.github_url && (
+                                            <Button
+                                                variant="outline"
+                                                className="h-12 w-full justify-start transition-all hover:border-primary/20 hover:bg-primary/5"
+                                                asChild
+                                            >
+                                                <a
+                                                    href={project.github_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <Github className="mr-3 h-5 w-5" />
+                                                    <div className="text-left">
+                                                        <div className="font-medium">
+                                                            GitHub Repository
+                                                        </div>
+                                                        <div className="text-xs text-muted-foreground">
+                                                            View source code
+                                                        </div>
                                                     </div>
-                                                    <div className="text-muted-foreground">
-                                                        {
-                                                            project.testimonial
-                                                                .position
-                                                        }
+                                                </a>
+                                            </Button>
+                                        )}
+                                        {project.live_url && (
+                                            <Button
+                                                className="h-12 w-full justify-start shadow-sm transition-all hover:shadow-md"
+                                                asChild
+                                            >
+                                                <a
+                                                    href={project.live_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <ExternalLink className="mr-3 h-5 w-5" />
+                                                    <div className="text-left">
+                                                        <div className="font-medium">
+                                                            Live Demo
+                                                        </div>
+                                                        <div className="text-xs text-primary-foreground/70">
+                                                            Visit live site
+                                                        </div>
                                                     </div>
+                                                </a>
+                                            </Button>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Project Statistics */}
+                            <Card className="border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                    <CardTitle className="flex items-center gap-2 text-xl">
+                                        <TrendingUp className="h-5 w-5 text-primary" />
+                                        Project Statistics
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-6">
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Tag className="h-4 w-4 text-primary" />
                                                 </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Category
+                                                </span>
+                                            </div>
+                                            <Badge
+                                                variant="outline"
+                                                className="bg-muted/50"
+                                            >
+                                                {project.category}
+                                            </Badge>
+                                        </div>
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <User className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Role
+                                                </span>
+                                            </div>
+                                            <span className="font-semibold">
+                                                {project.role}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Calendar className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Year
+                                                </span>
+                                            </div>
+                                            <span className="font-semibold">
+                                                {project.year}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Clock className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Duration
+                                                </span>
+                                            </div>
+                                            <span className="font-semibold">
+                                                {project.duration}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Layers className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Sort Order
+                                                </span>
+                                            </div>
+                                            <Badge
+                                                variant="outline"
+                                                className="bg-muted/50"
+                                            >
+                                                #{project.sort_order}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Project Status & Info */}
+                            <Card className="border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                    <CardTitle className="flex items-center gap-2 text-xl">
+                                        <Shield className="h-5 w-5 text-primary" />
+                                        Project Status & Info
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-6">
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Award className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Status
+                                                </span>
+                                            </div>
+                                            <Badge
+                                                className={`${getStatusColor(project.status)} border-0 shadow-sm`}
+                                            >
+                                                {project.status}
+                                            </Badge>
+                                        </div>
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Star className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Featured
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                {project.featured ? (
+                                                    <Badge className="border-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-sm">
+                                                        <Star className="mr-1 h-3 w-3" />
+                                                        Yes
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="bg-muted/50"
+                                                    >
+                                                        No
+                                                    </Badge>
+                                                )}
                                             </div>
                                         </div>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="space-y-6">
-                        {/* Project Meta */}
-                        <Card className="border-0 shadow-lg">
-                            <CardHeader className="border-b bg-muted/30">
-                                <CardTitle className="flex items-center gap-2 text-xl">
-                                    <Calendar className="h-5 w-5" />
-                                    Project Meta
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                                            <User className="h-5 w-5 text-primary-foreground" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">
-                                                Role
-                                            </p>
-                                            <p className="font-medium">
-                                                {project.role}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                                            <Clock className="h-5 w-5 text-primary-foreground" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">
-                                                Duration
-                                            </p>
-                                            <p className="font-medium">
-                                                {project.duration}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                                            <Calendar className="h-5 w-5 text-primary-foreground" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">
-                                                Year
-                                            </p>
-                                            <p className="font-medium">
-                                                {project.year}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                                            <span className="font-semibold text-primary-foreground">
-                                                #
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Calendar className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Created
+                                                </span>
+                                            </div>
+                                            <span className="text-sm font-semibold">
+                                                {formatDate(project.created_at)}
                                             </span>
                                         </div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">
-                                                Category
-                                            </p>
-                                            <p className="font-medium">
-                                                {project.category}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                                            <span className="font-semibold text-primary-foreground">
-                                                #
+                                        <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Zap className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-muted-foreground">
+                                                    Updated
+                                                </span>
+                                            </div>
+                                            <span className="text-sm font-semibold">
+                                                {formatDate(project.updated_at)}
                                             </span>
                                         </div>
-                                        <div>
-                                            <p className="text-sm text-muted-foreground">
-                                                Sort Order
-                                            </p>
-                                            <p className="font-medium">
-                                                {project.sort_order}
-                                            </p>
-                                        </div>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
 
-                        {/* Links */}
-                        <Card className="border-0 shadow-lg">
-                            <CardHeader className="border-b bg-muted/30">
-                                <CardTitle className="flex items-center gap-2 text-xl">
-                                    <ExternalLink className="h-5 w-5" />
-                                    Links
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <div className="space-y-3">
-                                    {project.github_url && (
+                            {/* Technology Stack Summary */}
+                            {project.technologies &&
+                                project.technologies.length > 0 && (
+                                    <Card className="border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                        <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                            <CardTitle className="flex items-center gap-2 text-xl">
+                                                <Code className="h-5 w-5 text-primary" />
+                                                Tech Stack
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-6">
+                                            <div className="space-y-3">
+                                                <div className="mb-3 text-sm text-muted-foreground">
+                                                    {
+                                                        project.technologies
+                                                            .length
+                                                    }{' '}
+                                                    technology
+                                                    {project.technologies
+                                                        .length !== 1
+                                                        ? 'ies'
+                                                        : ''}{' '}
+                                                    used
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {project.technologies
+                                                        .slice(0, 6)
+                                                        .map((tech) => (
+                                                            <Badge
+                                                                key={tech}
+                                                                variant="outline"
+                                                                className="border-primary/20 bg-muted/50 px-3 py-1 text-foreground"
+                                                            >
+                                                                {tech}
+                                                            </Badge>
+                                                        ))}
+                                                    {project.technologies
+                                                        .length > 6 && (
+                                                        <Badge
+                                                            variant="outline"
+                                                            className="bg-muted/50 px-3 py-1"
+                                                        >
+                                                            +
+                                                            {project
+                                                                .technologies
+                                                                .length -
+                                                                6}{' '}
+                                                            more
+                                                        </Badge>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                )}
+
+                            {/* Quick Actions */}
+                            <Card className="border-0 bg-background/80 shadow-lg backdrop-blur-sm">
+                                <CardHeader className="border-b border-border/50 bg-gradient-to-r from-muted/30 to-muted/10">
+                                    <CardTitle className="flex items-center gap-2 text-xl">
+                                        <Zap className="h-5 w-5 text-primary" />
+                                        Quick Actions
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-6">
+                                    <div className="space-y-3">
                                         <Button
                                             variant="outline"
-                                            className="w-full justify-start"
+                                            className="h-12 w-full justify-start transition-all hover:border-primary/20 hover:bg-primary/5"
                                             asChild
                                         >
-                                            <a
-                                                href={project.github_url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                                            <Link
+                                                href={`/admin/projects/${project.id}/edit`}
                                             >
-                                                <Github className="mr-2 h-4 w-4" />
-                                                GitHub Repository
-                                            </a>
+                                                <Edit className="mr-3 h-5 w-5" />
+                                                <div className="text-left">
+                                                    <div className="font-medium">
+                                                        Edit Project
+                                                    </div>
+                                                    <div className="text-xs text-muted-foreground">
+                                                        Modify project details
+                                                    </div>
+                                                </div>
+                                            </Link>
                                         </Button>
-                                    )}
-                                    {project.live_url && (
                                         <Button
-                                            className="w-full justify-start"
+                                            variant="outline"
+                                            className="h-12 w-full justify-start transition-all hover:border-primary/20 hover:bg-primary/5"
                                             asChild
                                         >
-                                            <a
-                                                href={project.live_url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <ExternalLink className="mr-2 h-4 w-4" />
-                                                Live Demo
-                                            </a>
+                                            <Link href={'/admin/projects'}>
+                                                <ArrowLeft className="mr-3 h-5 w-5" />
+                                                <div className="text-left">
+                                                    <div className="font-medium">
+                                                        Back to Projects
+                                                    </div>
+                                                    <div className="text-xs text-muted-foreground">
+                                                        Return to project list
+                                                    </div>
+                                                </div>
+                                            </Link>
                                         </Button>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Project Info */}
-                        <Card className="border-0 shadow-lg">
-                            <CardHeader className="border-b bg-muted/30">
-                                <CardTitle className="flex items-center gap-2 text-xl">
-                                    <Calendar className="h-5 w-5" />
-                                    Project Info
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <div className="space-y-3 text-sm">
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">
-                                            Created:
-                                        </span>
-                                        <span className="font-medium">
-                                            {formatDate(project.created_at)}
-                                        </span>
                                     </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">
-                                            Updated:
-                                        </span>
-                                        <span className="font-medium">
-                                            {formatDate(project.updated_at)}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">
-                                            Status:
-                                        </span>
-                                        <Badge
-                                            className={getStatusColor(
-                                                project.status,
-                                            )}
-                                        >
-                                            {project.status}
-                                        </Badge>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">
-                                            Featured:
-                                        </span>
-                                        <span className="font-medium">
-                                            {project.featured ? 'Yes' : 'No'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </div>
