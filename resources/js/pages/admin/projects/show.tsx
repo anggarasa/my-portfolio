@@ -20,6 +20,7 @@ import {
     Image as ImageIcon,
     Layers,
     Lightbulb,
+    Loader2,
     MessageSquare,
     Shield,
     Star,
@@ -30,6 +31,7 @@ import {
     Users,
     Zap,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface Project {
     id: string;
@@ -73,6 +75,8 @@ interface Props {
 }
 
 export default function ProjectsShow({ project }: Props) {
+    const [copyLoading, setCopyLoading] = useState<string | null>(null);
+
     const breadcrumbs = [
         {
             title: 'Dashboard',
@@ -107,6 +111,17 @@ export default function ProjectsShow({ project }: Props) {
             month: 'long',
             day: 'numeric',
         });
+    };
+
+    const handleCopy = async (text: string, type: string) => {
+        setCopyLoading(type);
+        try {
+            await navigator.clipboard.writeText(text);
+            setTimeout(() => setCopyLoading(null), 1000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            setCopyLoading(null);
+        }
     };
 
     return (
@@ -529,8 +544,19 @@ export default function ProjectsShow({ project }: Props) {
                                                                                     variant="ghost"
                                                                                     size="sm"
                                                                                     className="h-6 w-6 p-0"
+                                                                                    onClick={() =>
+                                                                                        handleCopy(
+                                                                                            account.email,
+                                                                                            `email-${index}`,
+                                                                                        )
+                                                                                    }
                                                                                 >
-                                                                                    <Copy className="h-3 w-3" />
+                                                                                    {copyLoading ===
+                                                                                    `email-${index}` ? (
+                                                                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                                                                    ) : (
+                                                                                        <Copy className="h-3 w-3" />
+                                                                                    )}
                                                                                 </Button>
                                                                             </div>
                                                                         </div>
@@ -548,8 +574,19 @@ export default function ProjectsShow({ project }: Props) {
                                                                                     variant="ghost"
                                                                                     size="sm"
                                                                                     className="h-6 w-6 p-0"
+                                                                                    onClick={() =>
+                                                                                        handleCopy(
+                                                                                            account.password,
+                                                                                            `password-${index}`,
+                                                                                        )
+                                                                                    }
                                                                                 >
-                                                                                    <Copy className="h-3 w-3" />
+                                                                                    {copyLoading ===
+                                                                                    `password-${index}` ? (
+                                                                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                                                                    ) : (
+                                                                                        <Copy className="h-3 w-3" />
+                                                                                    )}
                                                                                 </Button>
                                                                             </div>
                                                                         </div>

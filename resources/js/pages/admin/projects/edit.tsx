@@ -34,6 +34,7 @@ import {
     Layers,
     Lightbulb,
     Link as LinkIcon,
+    Loader2,
     MessageSquare,
     Plus,
     Save,
@@ -1524,7 +1525,11 @@ export default function ProjectsEdit({ project }: Props) {
                                 disabled={processing}
                                 className="shadow-lg transition-all duration-200 hover:shadow-xl"
                             >
-                                <Save className="mr-2 h-5 w-5" />
+                                {processing ? (
+                                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                ) : (
+                                    <Save className="mr-2 h-5 w-5" />
+                                )}
                                 {processing
                                     ? 'Updating Project...'
                                     : 'Update Project'}

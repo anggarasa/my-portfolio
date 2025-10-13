@@ -27,6 +27,7 @@ import {
     Filter,
     Grid3X3,
     List,
+    Loader2,
     Plus,
     Search,
     Star,
@@ -76,8 +77,18 @@ export default function ProjectsIndex({
         isOpen: false,
         project: null,
     });
+    const [loadingStates, setLoadingStates] = useState<{
+        search: boolean;
+        delete: string | null;
+        pagination: boolean;
+    }>({
+        search: false,
+        delete: null,
+        pagination: false,
+    });
 
     const handleSearch = () => {
+        setLoadingStates((prev) => ({ ...prev, search: true }));
         router.get(
             '/admin/projects',
             {
@@ -88,6 +99,9 @@ export default function ProjectsIndex({
             {
                 preserveState: true,
                 replace: true,
+                onFinish: () => {
+                    setLoadingStates((prev) => ({ ...prev, search: false }));
+                },
             },
         );
     };
@@ -118,13 +132,16 @@ export default function ProjectsIndex({
     };
 
     const handleDeleteProject = (projectId: string) => {
+        setLoadingStates((prev) => ({ ...prev, delete: projectId }));
         router.delete(`/admin/projects/${projectId}`, {
             onSuccess: () => {
                 setDeleteModal({ isOpen: false, project: null });
+                setLoadingStates((prev) => ({ ...prev, delete: null }));
                 // The page will automatically refresh due to Inertia
             },
             onError: (errors) => {
                 console.error('Error deleting project:', errors);
+                setLoadingStates((prev) => ({ ...prev, delete: null }));
             },
         });
     };
@@ -349,10 +366,17 @@ export default function ProjectsIndex({
                                 <div className="lg:col-span-2">
                                     <Button
                                         onClick={handleSearch}
+                                        disabled={loadingStates.search}
                                         className="h-11 w-full shadow-sm transition-all duration-200 hover:shadow-md"
                                     >
-                                        <Search className="mr-2 h-4 w-4" />
-                                        Search
+                                        {loadingStates.search ? (
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Search className="mr-2 h-4 w-4" />
+                                        )}
+                                        {loadingStates.search
+                                            ? 'Searching...'
+                                            : 'Search'}
                                     </Button>
                                 </div>
                             </div>
@@ -471,10 +495,22 @@ export default function ProjectsIndex({
                                                                             project,
                                                                         )
                                                                     }
+                                                                    disabled={
+                                                                        loadingStates.delete ===
+                                                                        project.id
+                                                                    }
                                                                     className="flex-1 border-destructive/20 text-destructive transition-all hover:border-destructive/30 hover:bg-destructive/5"
                                                                 >
-                                                                    <Trash2 className="mr-2 h-4 w-4" />
-                                                                    Delete
+                                                                    {loadingStates.delete ===
+                                                                    project.id ? (
+                                                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                    ) : (
+                                                                        <Trash2 className="mr-2 h-4 w-4" />
+                                                                    )}
+                                                                    {loadingStates.delete ===
+                                                                    project.id
+                                                                        ? 'Deleting...'
+                                                                        : 'Delete'}
                                                                 </Button>
                                                             </div>
                                                         </div>
@@ -562,10 +598,22 @@ export default function ProjectsIndex({
                                                                             project,
                                                                         )
                                                                     }
+                                                                    disabled={
+                                                                        loadingStates.delete ===
+                                                                        project.id
+                                                                    }
                                                                     className="border-destructive/20 text-destructive transition-all hover:border-destructive/30 hover:bg-destructive/5"
                                                                 >
-                                                                    <Trash2 className="mr-2 h-4 w-4" />
-                                                                    Delete
+                                                                    {loadingStates.delete ===
+                                                                    project.id ? (
+                                                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                    ) : (
+                                                                        <Trash2 className="mr-2 h-4 w-4" />
+                                                                    )}
+                                                                    {loadingStates.delete ===
+                                                                    project.id
+                                                                        ? 'Deleting...'
+                                                                        : 'Delete'}
                                                                 </Button>
                                                             </div>
                                                         </div>
@@ -642,17 +690,38 @@ export default function ProjectsIndex({
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() =>
+                                            onClick={() => {
+                                                setLoadingStates((prev) => ({
+                                                    ...prev,
+                                                    pagination: true,
+                                                }));
                                                 router.get(
                                                     `/admin/projects?page=${(projects.meta?.current_page || 1) - 1}`,
-                                                )
-                                            }
+                                                    {},
+                                                    {
+                                                        onFinish: () => {
+                                                            setLoadingStates(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    pagination: false,
+                                                                }),
+                                                            );
+                                                        },
+                                                    },
+                                                );
+                                            }}
                                             disabled={
-                                                projects.meta.current_page <= 1
+                                                projects.meta.current_page <=
+                                                    1 ||
+                                                loadingStates.pagination
                                             }
                                             className="transition-all hover:border-primary/20 hover:bg-primary/5 disabled:opacity-50"
                                         >
-                                            <ChevronLeft className="mr-2 h-4 w-4" />
+                                            {loadingStates.pagination ? (
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <ChevronLeft className="mr-2 h-4 w-4" />
+                                            )}
                                             Previous
                                         </Button>
                                         <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-4 py-2">
@@ -672,19 +741,39 @@ export default function ProjectsIndex({
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() =>
+                                            onClick={() => {
+                                                setLoadingStates((prev) => ({
+                                                    ...prev,
+                                                    pagination: true,
+                                                }));
                                                 router.get(
                                                     `/admin/projects?page=${(projects.meta?.current_page || 1) + 1}`,
-                                                )
-                                            }
+                                                    {},
+                                                    {
+                                                        onFinish: () => {
+                                                            setLoadingStates(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    pagination: false,
+                                                                }),
+                                                            );
+                                                        },
+                                                    },
+                                                );
+                                            }}
                                             disabled={
                                                 projects.meta.current_page >=
-                                                projects.meta.last_page
+                                                    projects.meta.last_page ||
+                                                loadingStates.pagination
                                             }
                                             className="transition-all hover:border-primary/20 hover:bg-primary/5 disabled:opacity-50"
                                         >
+                                            {loadingStates.pagination ? (
+                                                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                            )}
                                             Next
-                                            <ChevronRight className="ml-2 h-4 w-4" />
                                         </Button>
                                     </div>
                                 </div>
