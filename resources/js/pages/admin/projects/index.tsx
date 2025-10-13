@@ -16,6 +16,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import {
@@ -66,6 +67,7 @@ export default function ProjectsIndex({
     filters,
     categories,
 }: Props) {
+    const { showSuccess, showError } = useToast();
     const [search, setSearch] = useState(filters.search || '');
     const [category, setCategory] = useState(filters.category || '');
     const [status, setStatus] = useState(filters.status || '');
@@ -137,11 +139,17 @@ export default function ProjectsIndex({
             onSuccess: () => {
                 setDeleteModal({ isOpen: false, project: null });
                 setLoadingStates((prev) => ({ ...prev, delete: null }));
+                showSuccess('Project berhasil dihapus!');
                 // The page will automatically refresh due to Inertia
             },
             onError: (errors) => {
                 console.error('Error deleting project:', errors);
                 setLoadingStates((prev) => ({ ...prev, delete: null }));
+                // Show error message from server or generic error
+                const errorMessage =
+                    Object.values(errors)[0] ||
+                    'Terjadi kesalahan saat menghapus project';
+                showError(errorMessage);
             },
         });
     };

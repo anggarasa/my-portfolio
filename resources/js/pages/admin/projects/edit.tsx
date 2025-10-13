@@ -17,6 +17,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
@@ -81,6 +82,7 @@ interface Props {
 }
 
 export default function ProjectsEdit({ project }: Props) {
+    const { showSuccess, showError } = useToast();
     const { data, setData, put, processing, errors } = (useForm as any)({
         title: project.title || '',
         description: project.description || '',
@@ -142,11 +144,18 @@ export default function ProjectsEdit({ project }: Props) {
             {
                 forceFormData: true,
                 onSuccess: () => {
-                    // Optional: Handle success
+                    showSuccess('Project berhasil diperbarui!');
+                    // Redirect after a short delay to allow toast to be visible
+                    setTimeout(() => {
+                        router.visit('/admin/projects');
+                    }, 1500);
                 },
                 onError: (errors) => {
-                    // Optional: Handle errors
-                    console.error('Form errors:', errors);
+                    // Show error message from server or generic error
+                    const errorMessage =
+                        Object.values(errors)[0] ||
+                        'Terjadi kesalahan saat memperbarui project';
+                    showError(errorMessage);
                 },
             },
         );
