@@ -46,20 +46,6 @@ class PerformanceController extends Controller
         ]);
     }
 
-    public function health()
-    {
-        $healthStatus = $this->performanceService->checkHealthStatus();
-
-        $statusCode = match ($healthStatus['status']) {
-            'healthy' => 200,
-            'warning' => 200, // Still OK but with warnings
-            'critical' => 503, // Service unavailable
-            default => 200,
-        };
-
-        return response()->json($healthStatus, $statusCode);
-    }
-
     public function logMetrics()
     {
         // Allow any authenticated user to log metrics

@@ -19,8 +19,6 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
-// Health Check Route (public)
-Route::get('/health', [PerformanceController::class, 'health'])->name('health');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
