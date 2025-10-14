@@ -1,0 +1,234 @@
+/* Error page animations */
+@keyframes error-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes error-bounce {
+    0%,
+    20%,
+    53%,
+    80%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+    40%,
+    43% {
+        transform: translate3d(0, -8px, 0);
+    }
+    70% {
+        transform: translate3d(0, -4px, 0);
+    }
+    90% {
+        transform: translate3d(0, -2px, 0);
+    }
+}
+
+@keyframes error-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-2px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(2px);
+    }
+}
+
+/* Custom animation classes */
+.animate-shake {
+    animation: error-shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.animate-error-pulse {
+    animation: error-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-error-bounce {
+    animation: error-bounce 1s infinite;
+}
+
+/* Error page specific styles - Updated for smaller, more compact design */
+.error-page-container {
+    @apply flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4;
+}
+
+.error-page-card {
+    @apply mx-auto w-full max-w-lg;
+}
+
+.error-icon-container {
+    @apply mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full transition-all duration-300;
+}
+
+.error-icon-container:hover {
+    @apply scale-105;
+}
+
+/* Error icon container styles are now handled by React component */
+
+.error-status-code {
+    @apply mb-1 text-3xl font-bold text-foreground;
+}
+
+.error-title {
+    @apply mb-2 text-xl font-semibold text-foreground;
+}
+
+.error-description {
+    @apply mx-auto mb-4 max-w-sm text-sm text-muted-foreground;
+}
+
+.error-suggestions {
+    @apply mb-4 text-left;
+}
+
+.error-suggestions-title {
+    @apply mb-2 text-xs font-medium text-foreground;
+}
+
+.error-suggestions-list {
+    @apply space-y-1 text-xs text-muted-foreground;
+}
+
+.error-suggestions-item {
+    @apply flex items-start gap-2;
+}
+
+.error-suggestions-bullet {
+    @apply mt-0.5 text-xs text-primary;
+}
+
+.error-actions {
+    @apply mb-4 flex justify-center;
+}
+
+.error-action-button {
+    @apply px-6;
+}
+
+.error-help-text {
+    @apply border-t border-border pt-3;
+}
+
+.error-help-link {
+    @apply text-primary transition-colors duration-200 hover:underline;
+}
+
+/* Responsive adjustments for smaller design */
+@media (max-width: 640px) {
+    .error-page-container {
+        @apply p-3;
+    }
+
+    .error-page-card {
+        @apply max-w-sm;
+    }
+
+    .error-status-code {
+        @apply text-2xl;
+    }
+
+    .error-title {
+        @apply text-lg;
+    }
+
+    .error-description {
+        @apply text-xs;
+    }
+
+    .error-icon-container {
+        @apply h-12 w-12;
+    }
+
+    .error-icon-container svg {
+        @apply h-6 w-6;
+    }
+
+    .error-actions {
+        @apply flex-col gap-2;
+    }
+
+    .error-action-button {
+        @apply w-full;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-page-container {
+        @apply p-2;
+    }
+
+    .error-page-card {
+        @apply max-w-xs;
+    }
+
+    .error-status-code {
+        @apply text-xl;
+    }
+
+    .error-title {
+        @apply text-base;
+    }
+
+    .error-description {
+        @apply text-xs;
+    }
+
+    .error-icon-container {
+        @apply h-10 w-10;
+    }
+
+    .error-icon-container svg {
+        @apply h-5 w-5;
+    }
+}
+
+/* Dark mode specific adjustments */
+.dark .error-page-container {
+    @apply bg-gradient-to-br from-background via-background to-muted/10;
+}
+
+/* Animation delays for staggered effects */
+.error-suggestions-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.error-suggestions-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+/* Hover effects for interactive elements */
+.error-action-button:hover {
+    @apply scale-105 transform transition-transform duration-200;
+}
+
+/* Focus styles for accessibility */
+.error-action-button:focus {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+}
+
+/* Print styles */
+@media print {
+    .error-page-container {
+        @apply bg-white text-black;
+    }
+
+    .error-action-button {
+        @apply hidden;
+    }
+}

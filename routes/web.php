@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\PerformanceController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReplyController;
@@ -18,6 +19,13 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // SEO Routes
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
+
+// Error Pages Routes
+Route::get('/error/404', [ErrorController::class, 'notFound'])->name('error.404');
+Route::get('/error/500', [ErrorController::class, 'serverError'])->name('error.500');
+Route::get('/error/403', [ErrorController::class, 'forbidden'])->name('error.403');
+Route::get('/error/503', [ErrorController::class, 'serviceUnavailable'])->name('error.503');
+Route::get('/error/{status}', [ErrorController::class, 'generic'])->name('error.generic');
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

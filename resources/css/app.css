@@ -5,6 +5,9 @@
 /* Import project detail custom styles */
 @import './project-detail.css';
 
+/* Import error pages custom styles */
+@import './error-pages.css';
+
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
