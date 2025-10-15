@@ -10,12 +10,11 @@ class SeoService
         'title' => 'Portfolio - Full Stack Developer',
         'description' => 'Professional portfolio showcasing web development projects, skills, and experience in modern technologies.',
         'keywords' => 'portfolio, web developer, full stack, laravel, react, typescript, php, javascript',
-        'author' => 'Your Name',
+        'author' => 'Anggara Saputra',
         'robots' => 'index, follow',
         'canonical' => null,
         'og_type' => 'website',
         'og_image' => null,
-        'twitter_card' => 'summary_large_image',
     ];
 
     public function getMetaForPage(string $page, $data = null): array
@@ -28,7 +27,7 @@ class SeoService
                 $meta['title'] = 'Portfolio - Full Stack Developer | Modern Web Solutions';
                 $meta['description'] = 'Explore my portfolio of innovative web applications built with Laravel, React, and modern technologies. Professional full-stack development services.';
                 $meta['canonical'] = $baseUrl;
-                $meta['og_image'] = $baseUrl . '/assets/images/portfolio-og.jpg';
+                $meta['og_image'] = $baseUrl . '/assets/icons/ic_logo_favicon.jpg';
                 break;
 
             case 'project':
@@ -38,17 +37,11 @@ class SeoService
                     $meta['keywords'] = implode(', ', $data->technologies ?? []) . ', portfolio, project';
                     $meta['canonical'] = $baseUrl . '/project/' . $data->id;
                     $meta['og_type'] = 'article';
-                    $meta['og_image'] = $data->image_url ?: $baseUrl . '/assets/images/project-default.jpg';
+                    $meta['og_image'] = $data->image_url ?: $baseUrl . '/assets/images/img_threadloop_1.png';
 
                     // Add project-specific structured data
                     $meta['structured_data'] = $this->generateProjectStructuredData($data);
                 }
-                break;
-
-            case 'contact':
-                $meta['title'] = 'Contact - Get In Touch';
-                $meta['description'] = 'Get in touch for web development projects, collaborations, or inquiries. Professional full-stack development services available.';
-                $meta['canonical'] = $baseUrl . '/contact';
                 break;
 
             case 'dashboard':
@@ -94,8 +87,8 @@ class SeoService
             'url' => config('app.url'),
             'sameAs' => [
                 // Add your social media profiles here
-                // 'https://github.com/yourusername',
-                // 'https://linkedin.com/in/yourusername',
+                'https://github.com/anggarasa',
+                'https://www.linkedin.com/in/anggara-saputra-7baa95318',
             ],
             'knowsAbout' => [
                 'Web Development',
