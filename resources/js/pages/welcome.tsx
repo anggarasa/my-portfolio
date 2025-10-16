@@ -32,25 +32,7 @@ interface Props {
 
 export default function Welcome({ projects }: Props) {
     useEffect(() => {
-        // GSAP Animations
-        const tl = gsap.timeline();
-
-        // Initial animations
-        tl.from('.hero-content', {
-            duration: 1,
-            y: 50,
-            opacity: 0,
-            ease: 'power2.out',
-        }).from(
-            '.hero-image',
-            {
-                duration: 1,
-                scale: 0.8,
-                opacity: 0,
-                ease: 'power2.out',
-            },
-            '-=0.5',
-        );
+        // GSAP Animations - Removed hero animations as they're handled in HeroSection component
 
         // Scroll-triggered animations
         gsap.utils.toArray('.animate-on-scroll').forEach((element: any) => {

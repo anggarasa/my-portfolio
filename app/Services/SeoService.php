@@ -142,7 +142,7 @@ class SeoService
         $html .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . "\n";
         $html .= '<meta name="theme-color" content="#000000">' . "\n";
         $html .= '<meta name="msapplication-TileColor" content="#000000">' . "\n";
-        $html .= '<meta name="apple-mobile-web-app-capable" content="yes">' . "\n";
+        $html .= '<meta name="mobile-web-app-capable" content="yes">' . "\n";
         $html .= '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' . "\n";
 
         // Canonical URL
