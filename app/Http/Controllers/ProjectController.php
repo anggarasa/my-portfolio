@@ -3,12 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
+    protected $seoService;
+
+    public function __construct(SeoService $seoService)
+    {
+        $this->seoService = $seoService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -250,8 +257,16 @@ class ProjectController extends Controller
             return $project;
         });
 
+        // Generate SEO data
+        $seoData = $this->seoService->getMetaForPage('home');
+        $websiteStructuredData = $this->seoService->generateWebsiteStructuredData();
+
         return Inertia::render('welcome', [
             'projects' => $projects,
+            'seo' => [
+                'meta' => $seoData,
+                'website_structured_data' => $websiteStructuredData,
+            ],
         ]);
     }
 
@@ -264,8 +279,16 @@ class ProjectController extends Controller
             abort(404);
         }
 
+        // Generate SEO data for project
+        $seoData = $this->seoService->getMetaForPage('project', $project);
+        $structuredData = $this->seoService->generateProjectStructuredData($project);
+
         return Inertia::render('project-detail', [
             'project' => $project,
+            'seo' => [
+                'meta' => $seoData,
+                'structured_data' => $structuredData,
+            ],
         ]);
     }
 }

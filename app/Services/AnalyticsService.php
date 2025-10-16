@@ -8,11 +8,13 @@ class AnalyticsService
 {
     protected $ga4Id;
     protected $gtagId;
+    protected $gscVerification;
 
     public function __construct()
     {
         $this->ga4Id = config('services.google_analytics.ga4_id');
         $this->gtagId = config('services.google_analytics.gtag_id');
+        $this->gscVerification = config('seo.analytics.google_search_console.verification_code');
     }
 
     public function isEnabled(): bool
@@ -49,6 +51,15 @@ class AnalyticsService
         }
 
         return $html;
+    }
+
+    public function renderGoogleSiteVerification(): string
+    {
+        if (empty($this->gscVerification)) {
+            return '';
+        }
+
+        return "<meta name=\"google-site-verification\" content=\"{$this->gscVerification}\" />\n";
     }
 
     protected function renderGA4(): string

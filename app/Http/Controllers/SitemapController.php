@@ -34,7 +34,7 @@ class SitemapController extends Controller
         $projects = Project::published()->ordered()->get();
         foreach ($projects as $project) {
             $xml .= $this->addUrl(
-                $baseUrl . '/project/' . $project->id,
+                route('project.detail', $project),
                 $project->updated_at->toISOString(),
                 '0.8',
                 'monthly'
@@ -58,13 +58,29 @@ class SitemapController extends Controller
 
     public function robots(): Response
     {
+        $isProduction = app()->environment('production');
+
         $robots = "User-agent: *\n";
-        $robots .= "Allow: /\n";
-        $robots .= "Disallow: /admin/\n";
-        $robots .= "Disallow: /dashboard\n";
-        $robots .= "Disallow: /settings\n";
-        $robots .= "\n";
-        $robots .= "Sitemap: " . config('app.url') . "/sitemap.xml\n";
+
+        if ($isProduction) {
+            $robots .= "Allow: /\n";
+            $robots .= "Disallow: /admin/\n";
+            $robots .= "Disallow: /dashboard\n";
+            $robots .= "Disallow: /settings\n";
+            $robots .= "Disallow: /error/\n";
+            $robots .= "Disallow: /storage/\n";
+            $robots .= "Disallow: /vendor/\n";
+            $robots .= "Disallow: /node_modules/\n";
+            $robots .= "\n";
+            $robots .= "# Crawl-delay for respectful crawling\n";
+            $robots .= "Crawl-delay: 1\n";
+            $robots .= "\n";
+            $robots .= "# Sitemap location\n";
+            $robots .= "Sitemap: " . config('app.url') . "/sitemap.xml\n";
+        } else {
+            // Block indexing on non-production environments
+            $robots .= "Disallow: /\n";
+        }
 
         return response($robots, 200, [
             'Content-Type' => 'text/plain',

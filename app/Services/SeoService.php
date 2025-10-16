@@ -17,6 +17,15 @@ class SeoService
         'og_image' => null,
     ];
 
+    public function __construct()
+    {
+        // Merge defaults with config/seo.php if available to centralize SEO settings
+        $configured = config('seo.default_meta', []);
+        if (is_array($configured)) {
+            $this->defaultMeta = array_merge($this->defaultMeta, $configured);
+        }
+    }
+
     public function getMetaForPage(string $page, $data = null): array
     {
         $meta = $this->defaultMeta;
@@ -26,16 +35,17 @@ class SeoService
             case 'home':
                 $meta['title'] = 'Portfolio - Full Stack Developer | Modern Web Solutions';
                 $meta['description'] = 'Explore my portfolio of innovative web applications built with Laravel, React, and modern technologies. Professional full-stack development services.';
+                $meta['keywords'] = 'portfolio, web developer, full stack developer, laravel, react, typescript, php, javascript, web development, software engineer, frontend, backend';
                 $meta['canonical'] = $baseUrl;
-                $meta['og_image'] = $baseUrl . '/assets/icons/ic_logo_favicon.jpg';
+                $meta['og_image'] = $baseUrl . '/assets/icons/ic_logo_favicon.png';
                 break;
 
             case 'project':
                 if ($data instanceof Project) {
-                    $meta['title'] = $data->title . ' - Portfolio Project';
+                    $meta['title'] = $data->title . ' - Portfolio Project | Full Stack Developer';
                     $meta['description'] = $this->truncateDescription($data->description, 160);
-                    $meta['keywords'] = implode(', ', $data->technologies ?? []) . ', portfolio, project';
-                    $meta['canonical'] = $baseUrl . '/project/' . $data->id;
+                    $meta['keywords'] = implode(', ', $data->technologies ?? []) . ', portfolio, project, web development, ' . strtolower($data->category);
+                    $meta['canonical'] = route('project.detail', $data);
                     $meta['og_type'] = 'article';
                     $meta['og_image'] = $data->image_url ?: $baseUrl . '/assets/images/img_threadloop_1.png';
 
@@ -69,16 +79,24 @@ class SeoService
             'dateCreated' => $project->created_at->toISOString(),
             'dateModified' => $project->updated_at->toISOString(),
             'keywords' => implode(', ', $project->technologies ?? []),
-            'url' => config('app.url') . '/project/' . $project->id,
+            'url' => route('project.detail', $project),
             'mainEntityOfPage' => [
                 '@type' => 'WebPage',
-                '@id' => config('app.url') . '/project/' . $project->id
+                '@id' => route('project.detail', $project)
             ]
         ];
     }
 
     public function generateWebsiteStructuredData(): array
     {
+        // Prefer configured structured data if provided; otherwise, fall back to sensible defaults
+        $configuredPerson = config('seo.structured_data.person');
+        if (is_array($configuredPerson) && !empty($configuredPerson)) {
+            return array_merge([
+                '@context' => 'https://schema.org',
+            ], $configuredPerson);
+        }
+
         return [
             '@context' => 'https://schema.org',
             '@type' => 'Person',
@@ -86,9 +104,9 @@ class SeoService
             'jobTitle' => 'Full Stack Developer',
             'url' => config('app.url'),
             'sameAs' => [
-                // Add your social media profiles here
                 'https://github.com/anggarasa',
                 'https://www.linkedin.com/in/anggara-saputra-7baa95318',
+                'https://www.instagram.com/angr_sa/#',
             ],
             'knowsAbout' => [
                 'Web Development',
@@ -121,6 +139,11 @@ class SeoService
         $html .= '<meta name="keywords" content="' . htmlspecialchars($meta['keywords']) . '">' . "\n";
         $html .= '<meta name="author" content="' . htmlspecialchars($meta['author']) . '">' . "\n";
         $html .= '<meta name="robots" content="' . htmlspecialchars($meta['robots']) . '">' . "\n";
+        $html .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . "\n";
+        $html .= '<meta name="theme-color" content="#000000">' . "\n";
+        $html .= '<meta name="msapplication-TileColor" content="#000000">' . "\n";
+        $html .= '<meta name="apple-mobile-web-app-capable" content="yes">' . "\n";
+        $html .= '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' . "\n";
 
         // Canonical URL
         if ($meta['canonical']) {
@@ -138,14 +161,7 @@ class SeoService
             $html .= '<meta property="og:image:alt" content="' . htmlspecialchars($meta['title']) . '">' . "\n";
         }
 
-        // Twitter Card tags
-        $html .= '<meta name="twitter:card" content="' . htmlspecialchars($meta['twitter_card']) . '">' . "\n";
-        $html .= '<meta name="twitter:title" content="' . htmlspecialchars($meta['title']) . '">' . "\n";
-        $html .= '<meta name="twitter:description" content="' . htmlspecialchars($meta['description']) . '">' . "\n";
-
-        if ($meta['og_image']) {
-            $html .= '<meta name="twitter:image" content="' . htmlspecialchars($meta['og_image']) . '">' . "\n";
-        }
+        // Instagram uses Open Graph; no Twitter meta tags needed
 
         return $html;
     }
