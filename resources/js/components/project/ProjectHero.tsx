@@ -8,6 +8,7 @@ interface ProjectHeroProps {
         description: string;
         category: string;
         image: string;
+        image_url?: string;
         role: string;
         duration: string;
         year: string;
