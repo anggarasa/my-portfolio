@@ -376,7 +376,6 @@ export default function AboutSection() {
                                             'Mobile Development',
                                             'API Development',
                                             'Database Design',
-                                            'DevOps',
                                         ].map((skill) => (
                                             <span
                                                 key={skill}

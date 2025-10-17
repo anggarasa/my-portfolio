@@ -250,17 +250,17 @@ export default function ServicesSection() {
                                 return (
                                     <div
                                         key={index}
-                                        className="service-card group relative overflow-hidden rounded-2xl border border-border bg-card/50 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-gradient-to-br hover:from-gray-50 hover:to-gray-100 hover:shadow-lg dark:hover:from-gray-800 dark:hover:to-gray-900"
+                                        className="service-card group relative overflow-hidden rounded-2xl border border-border bg-card/50 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-gradient-to-br hover:from-primary/10 hover:to-accent/10 hover:shadow-lg hover:shadow-primary/20"
                                     >
                                         {/* Content */}
                                         <div className="service-content relative z-10 space-y-4">
                                             {/* Icon */}
-                                            <div className="service-icon flex h-12 w-12 items-center justify-center rounded-xl bg-muted/50 transition-all duration-300 group-hover:scale-110 group-hover:bg-muted">
-                                                <IconComponent className="h-6 w-6 text-muted-foreground transition-colors duration-300 group-hover:text-foreground" />
+                                            <div className="service-icon flex h-12 w-12 items-center justify-center rounded-xl bg-muted/50 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/10">
+                                                <IconComponent className="h-6 w-6 text-muted-foreground transition-colors duration-300 group-hover:text-primary" />
                                             </div>
 
                                             {/* Title */}
-                                            <h3 className="text-lg font-semibold text-foreground transition-colors duration-300">
+                                            <h3 className="text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
                                                 {service.title}
                                             </h3>
 
@@ -270,7 +270,7 @@ export default function ServicesSection() {
                                             </p>
 
                                             {/* Hover Arrow */}
-                                            <div className="flex items-center text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
+                                            <div className="flex items-center text-primary opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
                                                 <ArrowRight className="h-4 w-4" />
                                             </div>
                                         </div>
