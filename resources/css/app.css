@@ -169,4 +169,62 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+
+    /* Enhanced animations for Services Section */
+    @keyframes gradient {
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .animate-gradient {
+        background-size: 200% 200%;
+        animation: gradient 3s ease infinite;
+    }
+
+    /* Floating animation for decorative elements */
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* Pulse animation with different delays */
+    @keyframes pulse-delayed {
+        0%,
+        100% {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.6;
+            transform: scale(1.05);
+        }
+    }
+
+    .animate-pulse-delayed {
+        animation: pulse-delayed 2s ease-in-out infinite;
+    }
+
+    /* Enhanced hover effects */
+    .service-card:hover {
+        transform: translateY(-4px);
+    }
+
+    /* Smooth transitions for all interactive elements */
+    .transition-smooth {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 }
