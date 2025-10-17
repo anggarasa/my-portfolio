@@ -22,9 +22,9 @@ class ContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'message' => 'required|string|max:2000',
+            'name' => 'required|string|min:3|max:255',
+            'email' => 'required|email:dns,rfc,strict|max:255',
+            'message' => 'required|string|min:10|max:2000',
         ];
     }
 
@@ -37,11 +37,13 @@ class ContactRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required.',
+            'name.min' => 'Name must be at least 3 characters.',
             'name.max' => 'Name cannot exceed 255 characters.',
             'email.required' => 'Email is required.',
             'email.email' => 'Please enter a valid email address.',
             'email.max' => 'Email cannot exceed 255 characters.',
             'message.required' => 'Message is required.',
+            'message.min' => 'Message must be at least 10 characters.',
             'message.max' => 'Message cannot exceed 2000 characters.',
         ];
     }

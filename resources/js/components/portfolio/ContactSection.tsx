@@ -216,18 +216,33 @@ export default function ContactSection() {
         }
     }, [recentlySuccessful, showSuccess, trackContactFormSubmission]);
 
-    // Show error toast if there are general errors (not field-specific)
+    // Show error toast for validation errors
     useEffect(() => {
-        const hasGeneralError =
-            Object.keys(errors).length > 0 &&
-            !errors.name &&
-            !errors.email &&
-            !errors.message;
+        if (Object.keys(errors).length > 0) {
+            // Check if there are field-specific validation errors
+            const hasFieldErrors =
+                errors.name || errors.email || errors.message;
 
-        if (hasGeneralError) {
-            showError(
-                'An error occurred while sending your message. Please try again.',
-            );
+            if (hasFieldErrors) {
+                // Show specific validation error messages
+                const errorMessages = [];
+                if (errors.name) errorMessages.push(`Name: ${errors.name}`);
+                if (errors.email) errorMessages.push(`Email: ${errors.email}`);
+                if (errors.message)
+                    errorMessages.push(`Message: ${errors.message}`);
+
+                showError(
+                    `Please fix the following errors:\n${errorMessages.join('\n')}`,
+                );
+            } else if ((errors as any).general) {
+                // Show general error message from backend
+                showError((errors as any).general);
+            } else {
+                // Show fallback error message
+                showError(
+                    'An error occurred while sending your message. Please try again or contact me directly via email.',
+                );
+            }
         }
     }, [errors, showError]);
 
@@ -238,10 +253,9 @@ export default function ContactSection() {
                 reset();
             },
             onError: (errors) => {
-                // Handle specific field errors if needed
-                if (errors.name || errors.email || errors.message) {
-                    showError('Please check the form fields and try again.');
-                }
+                // Error handling is now done in useEffect above
+                // This ensures consistent error display
+                console.log('Form submission errors:', errors);
             },
         });
     };
@@ -503,22 +517,33 @@ export default function ContactSection() {
                                             id="name"
                                             name="name"
                                             type="text"
-                                            placeholder="Enter your full name"
+                                            placeholder="Enter your full name (minimum 3 characters)"
                                             value={data.name}
                                             onChange={(e) =>
                                                 setData('name', e.target.value)
                                             }
                                             className={`h-12 rounded-xl border-border bg-background/50 backdrop-blur-sm transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 ${
                                                 errors.name
-                                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                                    ? 'border-red-500 bg-red-50/50 focus:border-red-500 focus:ring-red-500/20 dark:bg-red-950/20'
                                                     : ''
                                             }`}
                                             required
                                         />
                                         {errors.name && (
-                                            <p className="text-sm text-red-600">
-                                                {errors.name}
-                                            </p>
+                                            <div className="flex items-center space-x-2 text-sm text-red-600">
+                                                <svg
+                                                    className="h-4 w-4 flex-shrink-0"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                        clipRule="evenodd"
+                                                    />
+                                                </svg>
+                                                <span>{errors.name}</span>
+                                            </div>
                                         )}
                                     </div>
 
@@ -533,22 +558,33 @@ export default function ContactSection() {
                                             id="email"
                                             name="email"
                                             type="email"
-                                            placeholder="Enter your email address"
+                                            placeholder="Enter your valid email address"
                                             value={data.email}
                                             onChange={(e) =>
                                                 setData('email', e.target.value)
                                             }
                                             className={`h-12 rounded-xl border-border bg-background/50 backdrop-blur-sm transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 ${
                                                 errors.email
-                                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                                    ? 'border-red-500 bg-red-50/50 focus:border-red-500 focus:ring-red-500/20 dark:bg-red-950/20'
                                                     : ''
                                             }`}
                                             required
                                         />
                                         {errors.email && (
-                                            <p className="text-sm text-red-600">
-                                                {errors.email}
-                                            </p>
+                                            <div className="flex items-center space-x-2 text-sm text-red-600">
+                                                <svg
+                                                    className="h-4 w-4 flex-shrink-0"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                        clipRule="evenodd"
+                                                    />
+                                                </svg>
+                                                <span>{errors.email}</span>
+                                            </div>
                                         )}
                                     </div>
 
@@ -562,7 +598,7 @@ export default function ContactSection() {
                                         <textarea
                                             id="message"
                                             name="message"
-                                            placeholder="Tell me about your project or idea..."
+                                            placeholder="Tell me about your project or idea... (minimum 10 characters)"
                                             value={data.message}
                                             onChange={(e) =>
                                                 setData(
@@ -573,15 +609,26 @@ export default function ContactSection() {
                                             rows={5}
                                             className={`w-full rounded-xl border bg-background/50 px-4 py-3 text-foreground placeholder-muted-foreground backdrop-blur-sm transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none ${
                                                 errors.message
-                                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                                    ? 'border-red-500 bg-red-50/50 focus:border-red-500 focus:ring-red-500/20 dark:bg-red-950/20'
                                                     : 'border-border'
                                             }`}
                                             required
                                         />
                                         {errors.message && (
-                                            <p className="text-sm text-red-600">
-                                                {errors.message}
-                                            </p>
+                                            <div className="flex items-center space-x-2 text-sm text-red-600">
+                                                <svg
+                                                    className="h-4 w-4 flex-shrink-0"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                        clipRule="evenodd"
+                                                    />
+                                                </svg>
+                                                <span>{errors.message}</span>
+                                            </div>
                                         )}
                                     </div>
 

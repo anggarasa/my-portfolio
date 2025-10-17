@@ -27,6 +27,17 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // Handle validation errors specifically
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $e->errors()], 422);
+            }
+
+            // For web requests, let Laravel handle validation errors normally
+            // This will redirect back with errors instead of showing 500 page
+            return null;
+        });
+
         // Handle 404 errors
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
             if ($request->expectsJson()) {
@@ -43,8 +54,13 @@ return Application::configure(basePath: dirname(__DIR__))
             return redirect()->route('error.403');
         });
 
-        // Handle 500 errors
+        // Handle 500 errors (only for non-validation exceptions)
         $exceptions->render(function (\Throwable $e, $request) {
+            // Skip validation exceptions as they are handled above
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
+                return null;
+            }
+
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Internal Server Error'], 500);
             }
