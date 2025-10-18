@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\User;
+use App\Services\SecurityEventLogger;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -47,12 +48,29 @@ class LoginRequest extends FormRequest
         if (! $user || ! Auth::getProvider()->validateCredentials($user, $this->only('password'))) {
             RateLimiter::hit($this->throttleKey());
 
+            // Log failed login attempt
+            $securityLogger = app(SecurityEventLogger::class);
+            $securityLogger->logAuthEvent('login_failed', [
+                'email' => $this->email,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // Log successful login attempt
+        $securityLogger = app(SecurityEventLogger::class);
+        $securityLogger->logAuthEvent('login_successful', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
 
         return $user;
     }

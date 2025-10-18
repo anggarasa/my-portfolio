@@ -6,6 +6,7 @@ use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\PerformanceController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\SecurityDashboardController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -55,6 +56,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('performance', [PerformanceController::class, 'dashboard'])->name('performance.dashboard');
         Route::get('performance/metrics', [PerformanceController::class, 'metrics'])->name('performance.metrics');
         Route::post('performance/log', [PerformanceController::class, 'logMetrics'])->name('performance.log');
+
+        // Security Dashboard Routes
+        Route::get('security', [SecurityDashboardController::class, 'index'])->name('security.dashboard');
+        Route::get('security/events', [SecurityDashboardController::class, 'events'])->name('security.events');
+        Route::get('security/stats', [SecurityDashboardController::class, 'stats'])->name('security.stats');
     });
 });
 

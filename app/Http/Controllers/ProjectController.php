@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Services\SeoService;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -11,10 +12,12 @@ use Inertia\Inertia;
 class ProjectController extends Controller
 {
     protected $seoService;
+    protected $fileUploadService;
 
-    public function __construct(SeoService $seoService)
+    public function __construct(SeoService $seoService, FileUploadService $fileUploadService)
     {
         $this->seoService = $seoService;
+        $this->fileUploadService = $fileUploadService;
     }
     /**
      * Display a listing of the resource.
@@ -68,51 +71,53 @@ class ProjectController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'long_description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'images' => 'nullable|array',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'technologies' => 'nullable|array',
+            'description' => 'required|string|max:1000',
+            'long_description' => 'nullable|string|max:5000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'technologies' => 'nullable|array|max:20',
+            'technologies.*' => 'string|max:50',
             'category' => 'required|string|max:255',
-            'github_url' => 'nullable|url',
-            'live_url' => 'nullable|url',
+            'github_url' => 'nullable|url|max:500',
+            'live_url' => 'nullable|url|max:500',
             'duration' => 'nullable|string|max:255',
-            'year' => 'nullable|string|max:255',
+            'year' => 'nullable|string|max:4',
             'role' => 'nullable|string|max:255',
-            'challenges' => 'nullable|array',
-            'solutions' => 'nullable|array',
-            'features' => 'nullable|array',
-            'demo_accounts' => 'nullable|array',
+            'challenges' => 'nullable|array|max:10',
+            'challenges.*' => 'string|max:1000',
+            'solutions' => 'nullable|array|max:10',
+            'solutions.*' => 'string|max:1000',
+            'features' => 'nullable|array|max:20',
+            'features.*' => 'string|max:500',
+            'demo_accounts' => 'nullable|array|max:5',
+            'demo_accounts.*' => 'string|max:500',
             'testimonial' => 'nullable|array',
             'status' => 'required|in:draft,published,archived',
-            'sort_order' => 'nullable|integer',
+            'sort_order' => 'nullable|integer|min:0|max:9999',
             'featured' => 'boolean',
         ]);
 
-        // Handle main image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('projects', $imageName, 'public');
-            $validated['image'] = $imageName;
-        }
-
-        // Handle additional images upload
-        if ($request->hasFile('images')) {
-            $additionalImages = [];
-            foreach ($request->file('images') as $image) {
-                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->storeAs('projects', $imageName, 'public');
-                $additionalImages[] = $imageName;
+        try {
+            // Handle main image upload with security validation
+            if ($request->hasFile('image')) {
+                $validated['image'] = $this->fileUploadService->uploadImage($request->file('image'), 'projects');
             }
-            $validated['images'] = $additionalImages;
+
+            // Handle additional images upload with security validation
+            if ($request->hasFile('images')) {
+                $validated['images'] = $this->fileUploadService->uploadMultipleImages($request->file('images'), 'projects');
+            }
+
+            Project::create($validated);
+
+            return redirect()->route('admin.projects.index')
+                ->with('success', 'Project created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['file_upload' => $e->getMessage()]);
         }
-
-        Project::create($validated);
-
-        return redirect()->route('admin.projects.index')
-            ->with('success', 'Project created successfully.');
     }
 
     /**
@@ -143,25 +148,30 @@ class ProjectController extends Controller
         // Define validation rules
         $rules = [
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'long_description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'images' => 'nullable|array',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'technologies' => 'nullable|array',
+            'description' => 'required|string|max:1000',
+            'long_description' => 'nullable|string|max:5000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'technologies' => 'nullable|array|max:20',
+            'technologies.*' => 'string|max:50',
             'category' => 'required|string|max:255',
-            'github_url' => 'nullable|url',
-            'live_url' => 'nullable|url',
+            'github_url' => 'nullable|url|max:500',
+            'live_url' => 'nullable|url|max:500',
             'duration' => 'nullable|string|max:255',
-            'year' => 'nullable|string|max:255',
+            'year' => 'nullable|string|max:4',
             'role' => 'nullable|string|max:255',
-            'challenges' => 'nullable|array',
-            'solutions' => 'nullable|array',
-            'features' => 'nullable|array',
-            'demo_accounts' => 'nullable|array',
+            'challenges' => 'nullable|array|max:10',
+            'challenges.*' => 'string|max:1000',
+            'solutions' => 'nullable|array|max:10',
+            'solutions.*' => 'string|max:1000',
+            'features' => 'nullable|array|max:20',
+            'features.*' => 'string|max:500',
+            'demo_accounts' => 'nullable|array|max:5',
+            'demo_accounts.*' => 'string|max:500',
             'testimonial' => 'nullable|array',
             'status' => 'required|in:draft,published,archived',
-            'sort_order' => 'nullable|integer',
+            'sort_order' => 'nullable|integer|min:0|max:9999',
             'featured' => 'boolean',
         ];
 
@@ -181,43 +191,34 @@ class ProjectController extends Controller
 
         $validated = $request->validate($fieldsToValidate);
 
-        // Handle main image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($project->image) {
-                Storage::delete('projects/' . $project->image);
+        try {
+            // Handle main image upload with security validation
+            if ($request->hasFile('image')) {
+                $validated['image'] = $this->fileUploadService->uploadImage(
+                    $request->file('image'),
+                    'projects',
+                    $project->image
+                );
             }
 
-            // Store new image
-            $image = $request->file('image');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('projects', $imageName, 'public');
-            $validated['image'] = $imageName;
+            // Handle additional images upload with security validation
+            if ($request->hasFile('images')) {
+                $validated['images'] = $this->fileUploadService->uploadMultipleImages(
+                    $request->file('images'),
+                    'projects',
+                    $project->images
+                );
+            }
+
+            $project->update($validated);
+
+            return redirect()->route('admin.projects.index')
+                ->with('success', 'Project updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['file_upload' => $e->getMessage()]);
         }
-
-        // Handle additional images upload
-        if ($request->hasFile('images')) {
-            // Delete old additional images if exist
-            if ($project->images) {
-                foreach ($project->images as $oldImage) {
-                    Storage::delete('projects/' . $oldImage);
-                }
-            }
-
-            // Store new additional images
-            $additionalImages = [];
-            foreach ($request->file('images') as $image) {
-                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->storeAs('projects', $imageName, 'public');
-                $additionalImages[] = $imageName;
-            }
-            $validated['images'] = $additionalImages;
-        }
-
-        $project->update($validated);
-
-        return redirect()->route('admin.projects.index')
-            ->with('success', 'Project updated successfully.');
     }
 
     /**
@@ -225,22 +226,27 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        // Delete associated main image if exists
-        if ($project->image) {
-            Storage::delete('projects/' . $project->image);
-        }
-
-        // Delete associated additional images if exist
-        if ($project->images) {
-            foreach ($project->images as $image) {
-                Storage::delete('projects/' . $image);
+        try {
+            // Delete associated main image if exists
+            if ($project->image) {
+                $this->fileUploadService->deleteFile('projects/' . $project->image);
             }
+
+            // Delete associated additional images if exist
+            if ($project->images) {
+                foreach ($project->images as $image) {
+                    $this->fileUploadService->deleteFile('projects/' . $image);
+                }
+            }
+
+            $project->delete();
+
+            return redirect()->route('admin.projects.index')
+                ->with('success', 'Project deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['delete_error' => 'Failed to delete project: ' . $e->getMessage()]);
         }
-
-        $project->delete();
-
-        return redirect()->route('admin.projects.index')
-            ->with('success', 'Project deleted successfully.');
     }
 
     /**
