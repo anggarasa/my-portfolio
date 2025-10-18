@@ -56,7 +56,10 @@ export default function ServicesSection() {
             // Section entrance animation
             gsap.fromTo(
                 sectionRef.current,
-                { opacity: 0, y: 50 },
+                {
+                    opacity: 0,
+                    y: 50,
+                },
                 {
                     opacity: 1,
                     y: 0,
@@ -76,7 +79,10 @@ export default function ServicesSection() {
                     headerRef.current.querySelectorAll('.header-element');
                 gsap.fromTo(
                     headerElements,
-                    { y: 30, opacity: 0 },
+                    {
+                        y: 30,
+                        opacity: 0,
+                    },
                     {
                         y: 0,
                         opacity: 1,
@@ -98,7 +104,11 @@ export default function ServicesSection() {
                     servicesRef.current.querySelectorAll('.service-card');
                 gsap.fromTo(
                     serviceCards,
-                    { y: 50, opacity: 0, scale: 0.8 },
+                    {
+                        y: 50,
+                        opacity: 0,
+                        scale: 0.8,
+                    },
                     {
                         y: 0,
                         opacity: 1,
@@ -165,7 +175,11 @@ export default function ServicesSection() {
             if (lanyardRef.current) {
                 gsap.fromTo(
                     lanyardRef.current,
-                    { scale: 0.8, opacity: 0, rotation: -10 },
+                    {
+                        scale: 0.8,
+                        opacity: 0,
+                        rotation: -10,
+                    },
                     {
                         scale: 1,
                         opacity: 1,

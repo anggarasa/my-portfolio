@@ -62,7 +62,10 @@ export default function ProjectsSection({ projects }: Props) {
             // Section entrance animation
             gsap.fromTo(
                 sectionRef.current,
-                { opacity: 0, y: 50 },
+                {
+                    opacity: 0,
+                    y: 50,
+                },
                 {
                     opacity: 1,
                     y: 0,
@@ -82,7 +85,10 @@ export default function ProjectsSection({ projects }: Props) {
                     headerRef.current.querySelectorAll('.header-element');
                 gsap.fromTo(
                     headerElements,
-                    { y: 30, opacity: 0 },
+                    {
+                        y: 30,
+                        opacity: 0,
+                    },
                     {
                         y: 0,
                         opacity: 1,
@@ -104,7 +110,10 @@ export default function ProjectsSection({ projects }: Props) {
                     filterRef.current.querySelectorAll('.filter-btn');
                 gsap.fromTo(
                     filterButtons,
-                    { scale: 0.8, opacity: 0 },
+                    {
+                        scale: 0.8,
+                        opacity: 0,
+                    },
                     {
                         scale: 1,
                         opacity: 1,
@@ -126,7 +135,11 @@ export default function ProjectsSection({ projects }: Props) {
                     projectsGridRef.current.querySelectorAll('.project-card');
                 gsap.fromTo(
                     projectCards,
-                    { y: 50, opacity: 0, scale: 0.9 },
+                    {
+                        y: 50,
+                        opacity: 0,
+                        scale: 0.9,
+                    },
                     {
                         y: 0,
                         opacity: 1,
@@ -170,7 +183,10 @@ export default function ProjectsSection({ projects }: Props) {
                     emptyStateRef.current.querySelectorAll('.empty-element');
                 gsap.fromTo(
                     emptyElements,
-                    { y: 30, opacity: 0 },
+                    {
+                        y: 30,
+                        opacity: 0,
+                    },
                     {
                         y: 0,
                         opacity: 1,

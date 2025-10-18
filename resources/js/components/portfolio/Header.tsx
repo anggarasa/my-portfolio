@@ -92,7 +92,10 @@ export default function Header() {
             // Initial header animation
             gsap.fromTo(
                 headerRef.current,
-                { y: -100, opacity: 0 },
+                {
+                    y: -100,
+                    opacity: 0,
+                },
                 {
                     y: 0,
                     opacity: 1,
@@ -104,7 +107,10 @@ export default function Header() {
             // Logo animation
             gsap.fromTo(
                 logoRef.current,
-                { scale: 0.8, opacity: 0 },
+                {
+                    scale: 0.8,
+                    opacity: 0,
+                },
                 {
                     scale: 1,
                     opacity: 1,
@@ -119,7 +125,10 @@ export default function Header() {
             if (navButtons) {
                 gsap.fromTo(
                     navButtons,
-                    { y: -20, opacity: 0 },
+                    {
+                        y: -20,
+                        opacity: 0,
+                    },
                     {
                         y: 0,
                         opacity: 1,
@@ -134,7 +143,10 @@ export default function Header() {
             // Theme button animation
             gsap.fromTo(
                 themeButtonRef.current,
-                { scale: 0, rotation: 180 },
+                {
+                    scale: 0,
+                    rotation: 180,
+                },
                 {
                     scale: 1,
                     rotation: 0,
@@ -146,7 +158,7 @@ export default function Header() {
 
             // Scroll-triggered animations
             ScrollTrigger.create({
-                trigger: 'body',
+                trigger: document.body,
                 start: 'top -100px',
                 end: 'bottom bottom',
                 onUpdate: (self) => {
@@ -184,7 +196,10 @@ export default function Header() {
             gsap.set(mobileMenuRef.current, { display: 'block' });
             gsap.fromTo(
                 mobileMenuRef.current,
-                { height: 0, opacity: 0 },
+                {
+                    height: 0,
+                    opacity: 0,
+                },
                 {
                     height: 'auto',
                     opacity: 1,
@@ -198,7 +213,10 @@ export default function Header() {
             if (mobileButtons) {
                 gsap.fromTo(
                     mobileButtons,
-                    { x: -20, opacity: 0 },
+                    {
+                        x: -20,
+                        opacity: 0,
+                    },
                     {
                         x: 0,
                         opacity: 1,

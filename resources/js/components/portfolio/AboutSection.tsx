@@ -84,7 +84,10 @@ export default function AboutSection() {
             // Section entrance animation
             gsap.fromTo(
                 sectionRef.current,
-                { opacity: 0, y: 50 },
+                {
+                    opacity: 0,
+                    y: 50,
+                },
                 {
                     opacity: 1,
                     y: 0,
@@ -102,7 +105,11 @@ export default function AboutSection() {
             if (profileRef.current) {
                 gsap.fromTo(
                     profileRef.current,
-                    { scale: 0.8, opacity: 0, rotation: -10 },
+                    {
+                        scale: 0.8,
+                        opacity: 0,
+                        rotation: -10,
+                    },
                     {
                         scale: 1,
                         opacity: 1,
@@ -125,7 +132,11 @@ export default function AboutSection() {
 
                 gsap.fromTo(
                     floatingIcons,
-                    { scale: 0, rotation: -180, opacity: 0 },
+                    {
+                        scale: 0,
+                        rotation: -180,
+                        opacity: 0,
+                    },
                     {
                         scale: 1,
                         rotation: 0,
@@ -183,7 +194,10 @@ export default function AboutSection() {
 
                 gsap.fromTo(
                     contentElements,
-                    { y: 30, opacity: 0 },
+                    {
+                        y: 30,
+                        opacity: 0,
+                    },
                     {
                         y: 0,
                         opacity: 1,
@@ -206,7 +220,11 @@ export default function AboutSection() {
 
                 gsap.fromTo(
                     techCards,
-                    { y: 50, opacity: 0, scale: 0.8 },
+                    {
+                        y: 50,
+                        opacity: 0,
+                        scale: 0.8,
+                    },
                     {
                         y: 0,
                         opacity: 1,

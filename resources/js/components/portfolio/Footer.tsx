@@ -107,7 +107,7 @@ export default function Footer() {
 
             // Scroll to top button animation
             ScrollTrigger.create({
-                trigger: 'body',
+                trigger: document.body,
                 start: 'top -100px',
                 end: 'bottom bottom',
                 onUpdate: (self) => {
