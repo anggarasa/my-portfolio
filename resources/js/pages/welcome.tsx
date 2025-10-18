@@ -1,15 +1,24 @@
-import AboutSection from '@/components/portfolio/AboutSection';
-import ContactSection from '@/components/portfolio/ContactSection';
-import Footer from '@/components/portfolio/Footer';
-import Header from '@/components/portfolio/Header';
-import HeroSection from '@/components/portfolio/HeroSection';
-import ProjectsSection from '@/components/portfolio/ProjectsSection';
-import ServicesSection from '@/components/portfolio/ServicesSection';
+import { SectionLoading } from '@/components/ui/loading-spinner';
 import { Toaster } from '@/components/ui/sonner';
 import { Head } from '@inertiajs/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
+
+// Lazy load portfolio components
+const Header = lazy(() => import('@/components/portfolio/Header'));
+const Footer = lazy(() => import('@/components/portfolio/Footer'));
+const HeroSection = lazy(() => import('@/components/portfolio/HeroSection'));
+const AboutSection = lazy(() => import('@/components/portfolio/AboutSection'));
+const ServicesSection = lazy(
+    () => import('@/components/portfolio/ServicesSection'),
+);
+const ProjectsSection = lazy(
+    () => import('@/components/portfolio/ProjectsSection'),
+);
+const ContactSection = lazy(
+    () => import('@/components/portfolio/ContactSection'),
+);
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -101,15 +110,29 @@ export default function Welcome({ projects }: Props) {
             </Head>
 
             <div className="min-h-screen bg-background text-foreground">
-                <Header />
+                <Suspense fallback={<SectionLoading />}>
+                    <Header />
+                </Suspense>
                 <main>
-                    <HeroSection />
-                    <AboutSection />
-                    <ServicesSection />
-                    <ProjectsSection projects={projects} />
-                    <ContactSection />
+                    <Suspense fallback={<SectionLoading />}>
+                        <HeroSection />
+                    </Suspense>
+                    <Suspense fallback={<SectionLoading />}>
+                        <AboutSection />
+                    </Suspense>
+                    <Suspense fallback={<SectionLoading />}>
+                        <ServicesSection />
+                    </Suspense>
+                    <Suspense fallback={<SectionLoading />}>
+                        <ProjectsSection projects={projects} />
+                    </Suspense>
+                    <Suspense fallback={<SectionLoading />}>
+                        <ContactSection />
+                    </Suspense>
                 </main>
-                <Footer />
+                <Suspense fallback={<SectionLoading />}>
+                    <Footer />
+                </Suspense>
                 <Toaster />
             </div>
         </>
