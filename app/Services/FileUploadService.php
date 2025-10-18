@@ -5,8 +5,6 @@ namespace App\Services;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Services\VirusScanningService;
-use App\Services\SecurityEventLogger;
 use Exception;
 
 class FileUploadService
@@ -38,25 +36,8 @@ class FileUploadService
      */
     public function uploadImage(UploadedFile $file, string $directory = 'uploads', ?string $oldFileName = null): ?string
     {
-        // Validate file
+        // Basic validation only
         $this->validateImageFile($file);
-
-        // Scan for viruses
-        $virusScanner = app(VirusScanningService::class);
-        $scanResult = $virusScanner->scanFile($file);
-
-        if (!$scanResult['safe']) {
-            // Log security event
-            $securityLogger = app(SecurityEventLogger::class);
-            $securityLogger->logFileUploadEvent('virus_detected', [
-                'filename' => $file->getClientOriginalName(),
-                'threats' => $scanResult['threats'],
-                'file_size' => $file->getSize(),
-                'mime_type' => $file->getMimeType(),
-            ]);
-
-            throw new Exception('File rejected due to security threats: ' . implode(', ', $scanResult['threats']));
-        }
 
         // Generate secure filename
         $fileName = $this->generateSecureFileName($file);
@@ -68,15 +49,6 @@ class FileUploadService
         if ($oldFileName && Storage::disk('public')->exists($directory . '/' . $oldFileName)) {
             Storage::disk('public')->delete($directory . '/' . $oldFileName);
         }
-
-        // Log successful upload
-        $securityLogger = app(SecurityEventLogger::class);
-        $securityLogger->logFileUploadEvent('file_uploaded', [
-            'filename' => $fileName,
-            'original_name' => $file->getClientOriginalName(),
-            'file_size' => $file->getSize(),
-            'mime_type' => $file->getMimeType(),
-        ]);
 
         return $fileName;
     }
@@ -116,7 +88,7 @@ class FileUploadService
     }
 
     /**
-     * Validate image file
+     * Validate image file - Basic validation only
      *
      * @param UploadedFile $file
      * @throws Exception
@@ -125,72 +97,24 @@ class FileUploadService
     {
         // Check file size
         if ($file->getSize() > self::MAX_FILE_SIZE) {
-            throw new Exception('File size exceeds maximum allowed size of 2MB.');
+            throw new Exception('Ukuran file terlalu besar. Maksimal 2MB.');
         }
 
         // Check MIME type
         $mimeType = $file->getMimeType();
         if (!in_array($mimeType, self::ALLOWED_IMAGE_MIMES)) {
-            throw new Exception('Invalid file type. Only JPEG, PNG, GIF, SVG, and WebP images are allowed.');
+            throw new Exception('Format file tidak didukung. Hanya JPEG, PNG, GIF, SVG, dan WebP yang diperbolehkan.');
         }
 
-        // Additional content validation
-        $this->validateImageContent($file);
-
-        // Check for suspicious file extensions
-        $this->validateFileExtension($file);
-    }
-
-    /**
-     * Validate image content using finfo
-     *
-     * @param UploadedFile $file
-     * @throws Exception
-     */
-    private function validateImageContent(UploadedFile $file): void
-    {
-        if (!extension_loaded('fileinfo')) {
-            return; // Skip if fileinfo extension is not available
-        }
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $detectedMimeType = finfo_file($finfo, $file->getPathname());
-        finfo_close($finfo);
-
-        if (!in_array($detectedMimeType, self::ALLOWED_IMAGE_MIMES)) {
-            throw new Exception('File content does not match the declared file type.');
-        }
-    }
-
-    /**
-     * Validate file extension
-     *
-     * @param UploadedFile $file
-     * @throws Exception
-     */
-    private function validateFileExtension(UploadedFile $file): void
-    {
+        // Check file extension
         $extension = strtolower($file->getClientOriginalExtension());
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
 
         if (!in_array($extension, $allowedExtensions)) {
-            throw new Exception('Invalid file extension.');
-        }
-
-        // Check for double extensions (e.g., image.jpg.php)
-        $filename = strtolower($file->getClientOriginalName());
-        $parts = explode('.', $filename);
-
-        if (count($parts) > 2) {
-            // Check if any part after the first dot is a dangerous extension
-            $dangerousExtensions = ['php', 'phtml', 'php3', 'php4', 'php5', 'pl', 'py', 'jsp', 'asp', 'sh', 'cgi'];
-            for ($i = 1; $i < count($parts); $i++) {
-                if (in_array($parts[$i], $dangerousExtensions)) {
-                    throw new Exception('File contains potentially dangerous extension.');
-                }
-            }
+            throw new Exception('Ekstensi file tidak diperbolehkan.');
         }
     }
+
 
     /**
      * Generate secure filename
@@ -239,8 +163,9 @@ class FileUploadService
         return [
             'path' => $filePath,
             'size' => Storage::disk($disk)->size($filePath),
-            'mime_type' => Storage::disk($disk)->getMimeType($filePath),
+            'mime_type' => mime_content_type(Storage::disk($disk)->path($filePath)),
             'last_modified' => Storage::disk($disk)->lastModified($filePath),
         ];
     }
+
 }
