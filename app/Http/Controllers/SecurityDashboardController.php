@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Services\SecurityEventLogger;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SecurityDashboardController extends Controller
 {
+    use AuthorizesRequests;
+
     protected $securityLogger;
 
     public function __construct(SecurityEventLogger $securityLogger)
@@ -20,8 +23,6 @@ class SecurityDashboardController extends Controller
      */
     public function index()
     {
-        $this->authorize('view-admin');
-
         $stats = $this->securityLogger->getSecurityStats();
         $recentEvents = $this->securityLogger->getRecentEvents(50);
 
@@ -36,8 +37,6 @@ class SecurityDashboardController extends Controller
      */
     public function events(Request $request)
     {
-        $this->authorize('view-admin');
-
         $limit = $request->get('limit', 50);
         $events = $this->securityLogger->getRecentEvents($limit);
 
@@ -52,8 +51,6 @@ class SecurityDashboardController extends Controller
      */
     public function stats()
     {
-        $this->authorize('view-admin');
-
         $stats = $this->securityLogger->getSecurityStats();
 
         return response()->json($stats);
