@@ -233,24 +233,24 @@ export default function Footer() {
                                     <div className="flex items-center space-x-2 text-sm">
                                         <Mail className="h-4 w-4 text-primary" />
                                         <a
-                                            href="mailto:anggara.saputra@example.com"
+                                            href="mailto:anggarasaputra273@gmail.com"
                                             className="transition-colors hover:text-foreground"
                                         >
-                                            anggara.saputra@example.com
+                                            anggarasaputra273@gmail.com
                                         </a>
                                     </div>
                                     <div className="flex items-center space-x-2 text-sm">
                                         <Phone className="h-4 w-4 text-primary" />
                                         <a
-                                            href="tel:+6281234567890"
+                                            href="https://wa.me/6281224242608"
                                             className="transition-colors hover:text-foreground"
                                         >
-                                            +62 812 3456 7890
+                                            +62 812 2424 2608
                                         </a>
                                     </div>
                                     <div className="flex items-center space-x-2 text-sm">
                                         <MapPin className="h-4 w-4 text-primary" />
-                                        <span>Jakarta, Indonesia</span>
+                                        <span>West Java, Indonesia</span>
                                     </div>
                                 </div>
                             </div>
