@@ -37,7 +37,7 @@ class SeoService
                 $meta['description'] = 'Explore my portfolio of innovative web applications built with Laravel, React, and modern technologies. Professional full-stack development services.';
                 $meta['keywords'] = 'portfolio, web developer, full stack developer, laravel, react, typescript, php, javascript, web development, software engineer, frontend, backend';
                 $meta['canonical'] = $baseUrl;
-                $meta['og_image'] = $baseUrl . '/assets/images/img_open_graph.jpg';
+                $meta['og_image'] = $baseUrl . '/assets/images/img_open_graph.png';
                 break;
 
             case 'project':
