@@ -1,26 +1,43 @@
-# Stage 1: Build assets
-FROM node:20-alpine AS node-builder
+# Stage 1: Build assets (needs both PHP and Node.js for wayfinder plugin)
+FROM php:8.4-cli-alpine AS asset-builder
+
+# Install Node.js and npm
+RUN apk add --no-cache nodejs npm
+
+# Install PHP extensions needed for artisan commands
+RUN apk add --no-cache \
+    libzip-dev \
+    icu-dev \
+    oniguruma-dev \
+    && docker-php-ext-install \
+    pdo_mysql \
+    mbstring \
+    intl \
+    zip
+
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-# Stage 2: Install PHP dependencies
-FROM composer:2 AS composer-builder
-
-WORKDIR /app
-
+# Copy composer files and install dependencies first
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
+# Copy package files and install npm dependencies
+COPY package*.json ./
+RUN npm ci
+
+# Copy all source files
 COPY . .
+
+# Run composer autoload
 RUN composer dump-autoload --optimize
 
-# Stage 3: Production image
+# Build assets (now PHP is available for wayfinder plugin)
+RUN npm run build
+
+# Stage 2: Production image
 FROM php:8.4-fpm-alpine
 
 # Install system dependencies
@@ -74,9 +91,9 @@ COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files
-COPY --from=composer-builder /app/vendor ./vendor
-COPY --from=node-builder /app/public/build ./public/build
+# Copy application files from asset-builder
+COPY --from=asset-builder /app/vendor ./vendor
+COPY --from=asset-builder /app/public/build ./public/build
 COPY . .
 
 # Set permissions
