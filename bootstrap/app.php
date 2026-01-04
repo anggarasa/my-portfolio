@@ -9,6 +9,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Support\Facades\Log;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -63,14 +64,26 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'Internal Server Error'], 500);
+            // Skip redirect for error pages to prevent infinite loops
+            $errorPaths = ['/error/500', '/error/404', '/error/403', '/error/503'];
+            if (in_array($request->getPathInfo(), $errorPaths)) {
+                return null;
             }
 
-            // Log the error
-            \Log::error('Unhandled exception: ' . $e->getMessage(), [
-                'exception' => $e,
-                'request' => $request->all(),
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Internal Server Error',
+                    'error' => config('app.debug') ? $e->getMessage() : null,
+                ], 500);
+            }
+
+            // Log the error with full details
+            Log::error('Unhandled exception: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
                 'url' => $request->url(),
             ]);
 
