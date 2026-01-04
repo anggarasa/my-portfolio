@@ -121,7 +121,7 @@ class AnalyticsService
         ";
     }
 
-    public function trackPageView(string $pagePath, string $pageTitle = null): string
+    public function trackPageView(string $pagePath, ?string $pageTitle = null): string
     {
         if (!$this->isEnabled()) {
             return '';
