@@ -6,11 +6,13 @@ interface ProjectMetaProps {
         role: string;
         duration: string;
         year: string;
-        technologies: string[];
+        technologies: string[] | null;
     };
 }
 
 export default function ProjectMeta({ project }: ProjectMetaProps) {
+    const safeTechnologies = project.technologies ?? [];
+
     return (
         <div className="space-y-6">
             {/* Project Meta */}
@@ -21,7 +23,7 @@ export default function ProjectMeta({ project }: ProjectMetaProps) {
                     </div>
                     <div>
                         <p className="text-sm text-muted-foreground">Role</p>
-                        <p className="font-medium">{project.role}</p>
+                        <p className="font-medium">{project.role || '-'}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -32,7 +34,7 @@ export default function ProjectMeta({ project }: ProjectMetaProps) {
                         <p className="text-sm text-muted-foreground">
                             Duration
                         </p>
-                        <p className="font-medium">{project.duration}</p>
+                        <p className="font-medium">{project.duration || '-'}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -41,26 +43,28 @@ export default function ProjectMeta({ project }: ProjectMetaProps) {
                     </div>
                     <div>
                         <p className="text-sm text-muted-foreground">Year</p>
-                        <p className="font-medium">{project.year}</p>
+                        <p className="font-medium">{project.year || '-'}</p>
                     </div>
                 </div>
             </div>
 
             {/* Technologies */}
-            <div className="space-y-3">
-                <h3 className="text-lg font-semibold">Technologies Used</h3>
-                <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
-                        <Badge
-                            key={tech}
-                            variant="outline"
-                            className="px-3 py-1"
-                        >
-                            {tech}
-                        </Badge>
-                    ))}
+            {safeTechnologies.length > 0 && (
+                <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Technologies Used</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {safeTechnologies.map((tech) => (
+                            <Badge
+                                key={tech}
+                                variant="outline"
+                                className="px-3 py-1"
+                            >
+                                {tech}
+                            </Badge>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

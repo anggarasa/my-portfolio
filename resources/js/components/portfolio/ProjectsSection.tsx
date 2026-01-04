@@ -20,7 +20,7 @@ interface Project {
     description: string;
     image: string;
     image_url?: string;
-    technologies: string[];
+    technologies: string[] | null;
     category: string;
     github_url: string;
     live_url: string;
@@ -377,7 +377,7 @@ export default function ProjectsSection({ projects }: Props) {
                                 <CardContent className="space-y-4">
                                     {/* Technologies */}
                                     <div className="flex flex-wrap gap-2">
-                                        {project.technologies
+                                        {(project.technologies ?? [])
                                             .slice(0, 4)
                                             .map((tech) => (
                                                 <span
@@ -387,11 +387,12 @@ export default function ProjectsSection({ projects }: Props) {
                                                     {tech}
                                                 </span>
                                             ))}
-                                        {project.technologies.length > 4 && (
+                                        {(project.technologies?.length ?? 0) >
+                                            4 && (
                                             <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
                                                 +
-                                                {project.technologies.length -
-                                                    4}{' '}
+                                                {(project.technologies
+                                                    ?.length ?? 0) - 4}{' '}
                                                 more
                                             </span>
                                         )}
