@@ -1,4 +1,6 @@
-# Stage 1: Build assets (needs both PHP and Node.js for wayfinder plugin)
+# ==============================================================================
+# Stage 1: Build frontend assets (needs both PHP and Node.js for wayfinder plugin)
+# ==============================================================================
 FROM php:8.4-cli-alpine AS asset-builder
 
 # Install Node.js and npm
@@ -37,8 +39,17 @@ RUN composer dump-autoload --optimize
 # Build assets (now PHP is available for wayfinder plugin)
 RUN npm run build
 
-# Stage 2: Production image
+# ==============================================================================
+# Stage 2: Production image with PHP-FPM + Nginx
+# ==============================================================================
 FROM php:8.4-fpm-alpine
+
+LABEL maintainer="Angga Rasa <anggarasa@email.com>"
+LABEL description="Production-ready Laravel Docker image for Coolify deployment"
+
+# Build arguments
+ARG APP_ENV=production
+ENV APP_ENV=${APP_ENV}
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -52,7 +63,9 @@ RUN apk add --no-cache \
     oniguruma-dev \
     libxml2-dev \
     curl-dev \
-    linux-headers
+    linux-headers \
+    curl \
+    bash
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -75,12 +88,15 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && docker-php-ext-enable redis \
     && apk del .build-deps
 
-# Configure PHP
+# Configure PHP production ini
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Copy PHP configuration
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Copy PHP-FPM pool configuration
+COPY docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Copy nginx configuration
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
@@ -94,23 +110,36 @@ WORKDIR /var/www/html
 # Copy application files from asset-builder
 COPY --from=asset-builder /app/vendor ./vendor
 COPY --from=asset-builder /app/public/build ./public/build
+
+# Copy application source code
 COPY . .
 
-# Set permissions
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Create necessary directories
+RUN mkdir -p /var/log/supervisor /run/nginx \
+    && mkdir -p storage/app/public \
+    && mkdir -p storage/framework/{cache,sessions,testing,views} \
+    && mkdir -p storage/logs \
+    && mkdir -p bootstrap/cache
+
+# Set permissions for www-data
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Create necessary directories
-RUN mkdir -p /var/log/supervisor /run/nginx
-
-# Cache Laravel configuration
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
-
 # Expose port
 EXPOSE 80
 
-# Start supervisor
+# Healthcheck compatible with Coolify
+# Uses simple PHP file that doesn't require Laravel bootstrap
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://127.0.0.1/health.php || exit 1
+
+# Use entrypoint script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Start supervisor (run by entrypoint after setup)
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
