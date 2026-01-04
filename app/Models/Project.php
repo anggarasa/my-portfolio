@@ -9,6 +9,11 @@ class Project extends Model
 {
     use HasUuids;
 
+    /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = ['image_url', 'images_urls'];
+
     protected $fillable = [
         'title',
         'description',
@@ -67,10 +72,16 @@ class Project extends Model
 
     /**
      * Get the image URL attribute
+     * Supports both Cloudinary URLs (full URLs) and legacy local storage paths
      */
     public function getImageUrlAttribute()
     {
         if ($this->image) {
+            // If already a full URL (Cloudinary), return as-is
+            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+                return $this->image;
+            }
+            // Legacy: local storage path
             return asset('storage/projects/' . $this->image);
         }
         return null;
@@ -78,11 +89,17 @@ class Project extends Model
 
     /**
      * Get the images URLs attribute
+     * Supports both Cloudinary URLs (full URLs) and legacy local storage paths
      */
     public function getImagesUrlsAttribute()
     {
         if ($this->images) {
             return array_map(function ($image) {
+                // If already a full URL (Cloudinary), return as-is
+                if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+                    return $image;
+                }
+                // Legacy: local storage path
                 return asset('storage/projects/' . $image);
             }, $this->images);
         }

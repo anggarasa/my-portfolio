@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use Exception;
 
 class FileUploadService
@@ -26,65 +27,98 @@ class FileUploadService
     private const MAX_FILE_SIZE = 2048 * 1024;
 
     /**
-     * Upload and validate an image file
+     * Cloudinary instance
+     */
+    private ?Cloudinary $cloudinary = null;
+
+    /**
+     * Get Cloudinary instance
+     */
+    private function getCloudinary(): Cloudinary
+    {
+        if ($this->cloudinary === null) {
+            $cloudinaryUrl = env('CLOUDINARY_URL');
+
+            if (!$cloudinaryUrl) {
+                throw new Exception('CLOUDINARY_URL tidak dikonfigurasi di file .env');
+            }
+
+            $this->cloudinary = new Cloudinary($cloudinaryUrl);
+        }
+
+        return $this->cloudinary;
+    }
+
+    /**
+     * Upload and validate an image file to Cloudinary
      *
      * @param UploadedFile $file
      * @param string $directory
-     * @param string|null $oldFileName
-     * @return string|null
+     * @param string|null $oldFileUrl
+     * @return string|null Returns the Cloudinary URL
      * @throws Exception
      */
-    public function uploadImage(UploadedFile $file, string $directory = 'uploads', ?string $oldFileName = null): ?string
+    public function uploadImage(UploadedFile $file, string $directory = 'uploads', ?string $oldFileUrl = null): ?string
     {
         // Basic validation only
         $this->validateImageFile($file);
 
-        // Generate secure filename
-        $fileName = $this->generateSecureFileName($file);
+        // Generate public_id for Cloudinary
+        $publicId = $this->generatePublicId($directory);
 
-        // Store file
-        $file->storeAs($directory, $fileName, 'public');
+        try {
+            // Upload to Cloudinary using SDK directly
+            $result = $this->getCloudinary()->uploadApi()->upload($file->getRealPath(), [
+                'folder' => $directory,
+                'public_id' => $publicId,
+                'resource_type' => 'image',
+                'transformation' => [
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                ],
+            ]);
 
-        // Delete old file if provided
-        if ($oldFileName && Storage::disk('public')->exists($directory . '/' . $oldFileName)) {
-            Storage::disk('public')->delete($directory . '/' . $oldFileName);
+            // Delete old file from Cloudinary if provided
+            if ($oldFileUrl) {
+                $this->deleteFromCloudinary($oldFileUrl);
+            }
+
+            return $result['secure_url'];
+        } catch (Exception $e) {
+            throw new Exception('Gagal mengupload gambar ke Cloudinary: ' . $e->getMessage());
         }
-
-        return $fileName;
     }
 
     /**
-     * Upload multiple image files
+     * Upload multiple image files to Cloudinary
      *
      * @param array $files
      * @param string $directory
-     * @param array|null $oldFileNames
-     * @return array
+     * @param array|null $oldFileUrls
+     * @return array Returns array of Cloudinary URLs
      * @throws Exception
      */
-    public function uploadMultipleImages(array $files, string $directory = 'uploads', ?array $oldFileNames = null): array
+    public function uploadMultipleImages(array $files, string $directory = 'uploads', ?array $oldFileUrls = null): array
     {
-        $uploadedFiles = [];
+        $uploadedUrls = [];
 
         foreach ($files as $file) {
             if ($file instanceof UploadedFile) {
-                $fileName = $this->uploadImage($file, $directory);
-                if ($fileName) {
-                    $uploadedFiles[] = $fileName;
+                $url = $this->uploadImage($file, $directory);
+                if ($url) {
+                    $uploadedUrls[] = $url;
                 }
             }
         }
 
-        // Delete old files if provided
-        if ($oldFileNames) {
-            foreach ($oldFileNames as $oldFileName) {
-                if (Storage::disk('public')->exists($directory . '/' . $oldFileName)) {
-                    Storage::disk('public')->delete($directory . '/' . $oldFileName);
-                }
+        // Delete old files from Cloudinary if provided
+        if ($oldFileUrls) {
+            foreach ($oldFileUrls as $oldFileUrl) {
+                $this->deleteFromCloudinary($oldFileUrl);
             }
         }
 
-        return $uploadedFiles;
+        return $uploadedUrls;
     }
 
     /**
@@ -115,24 +149,68 @@ class FileUploadService
         }
     }
 
-
     /**
-     * Generate secure filename
+     * Generate public_id for Cloudinary
      *
-     * @param UploadedFile $file
+     * @param string $directory
      * @return string
      */
-    private function generateSecureFileName(UploadedFile $file): string
+    private function generatePublicId(string $directory): string
     {
-        $extension = $file->getClientOriginalExtension();
         $timestamp = time();
         $randomString = Str::random(16);
 
-        return "{$timestamp}_{$randomString}.{$extension}";
+        return "{$timestamp}_{$randomString}";
     }
 
     /**
-     * Delete file safely
+     * Extract public_id from Cloudinary URL
+     *
+     * @param string $url
+     * @return string|null
+     */
+    private function extractPublicIdFromUrl(string $url): ?string
+    {
+        // Skip if not a Cloudinary URL
+        if (!str_contains($url, 'cloudinary.com') && !str_contains($url, 'res.cloudinary.com')) {
+            return null;
+        }
+
+        // Extract public_id from URL
+        // Example: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/projects/1234567890_abcdef.jpg
+        $pattern = '/\/v\d+\/(.+?)(?:\.[a-zA-Z]+)?$/';
+        if (preg_match($pattern, $url, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * Delete file from Cloudinary
+     *
+     * @param string $url
+     * @return bool
+     */
+    private function deleteFromCloudinary(string $url): bool
+    {
+        $publicId = $this->extractPublicIdFromUrl($url);
+
+        if (!$publicId) {
+            return false;
+        }
+
+        try {
+            $this->getCloudinary()->uploadApi()->destroy($publicId);
+            return true;
+        } catch (Exception $e) {
+            // Log error but don't throw - deletion failure shouldn't break the upload
+            return false;
+        }
+    }
+
+    /**
+     * Delete file safely (supports both Cloudinary URLs and legacy local paths)
      *
      * @param string $filePath
      * @param string $disk
@@ -140,15 +218,21 @@ class FileUploadService
      */
     public function deleteFile(string $filePath, string $disk = 'public'): bool
     {
-        if (Storage::disk($disk)->exists($filePath)) {
-            return Storage::disk($disk)->delete($filePath);
+        // Check if it's a Cloudinary URL
+        if (str_contains($filePath, 'cloudinary.com') || str_contains($filePath, 'res.cloudinary.com')) {
+            return $this->deleteFromCloudinary($filePath);
+        }
+
+        // Legacy: Handle local storage deletion
+        if (\Illuminate\Support\Facades\Storage::disk($disk)->exists($filePath)) {
+            return \Illuminate\Support\Facades\Storage::disk($disk)->delete($filePath);
         }
 
         return false;
     }
 
     /**
-     * Get file info safely
+     * Get file info (for Cloudinary URLs, returns basic info)
      *
      * @param string $filePath
      * @param string $disk
@@ -156,16 +240,25 @@ class FileUploadService
      */
     public function getFileInfo(string $filePath, string $disk = 'public'): ?array
     {
-        if (!Storage::disk($disk)->exists($filePath)) {
+        // For Cloudinary URLs, return basic info
+        if (str_contains($filePath, 'cloudinary.com') || str_contains($filePath, 'res.cloudinary.com')) {
+            return [
+                'path' => $filePath,
+                'type' => 'cloudinary',
+            ];
+        }
+
+        // Legacy: Handle local storage
+        if (!\Illuminate\Support\Facades\Storage::disk($disk)->exists($filePath)) {
             return null;
         }
 
         return [
             'path' => $filePath,
-            'size' => Storage::disk($disk)->size($filePath),
-            'mime_type' => mime_content_type(Storage::disk($disk)->path($filePath)),
-            'last_modified' => Storage::disk($disk)->lastModified($filePath),
+            'size' => \Illuminate\Support\Facades\Storage::disk($disk)->size($filePath),
+            'mime_type' => mime_content_type(\Illuminate\Support\Facades\Storage::disk($disk)->path($filePath)),
+            'last_modified' => \Illuminate\Support\Facades\Storage::disk($disk)->lastModified($filePath),
+            'type' => 'local',
         ];
     }
-
 }
