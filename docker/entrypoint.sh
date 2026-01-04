@@ -43,7 +43,16 @@ fi
 # ------------------------------------------------------------------------------
 if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
     echo "🗄️ Running database migrations..."
-    php artisan migrate --force
+    php artisan migrate --force || echo "⚠️ Migrations failed or already up to date"
+fi
+
+# ------------------------------------------------------------------------------
+# Run database seeders if enabled (first deployment)
+# Set RUN_SEEDERS=true environment variable to enable
+# ------------------------------------------------------------------------------
+if [ "${RUN_SEEDERS:-false}" = "true" ]; then
+    echo "🌱 Running database seeders..."
+    php artisan db:seed --force || echo "⚠️ Seeders failed or already seeded"
 fi
 
 # ------------------------------------------------------------------------------
@@ -55,15 +64,27 @@ echo "⚡ Optimizing Laravel for production..."
 php artisan config:clear 2>/dev/null || true
 php artisan route:clear 2>/dev/null || true
 php artisan view:clear 2>/dev/null || true
+php artisan cache:clear 2>/dev/null || true
 
-# Generate new cache
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+# Generate new cache (after migrations so database is ready)
+php artisan config:cache || echo "⚠️ Config cache failed"
+php artisan route:cache || echo "⚠️ Route cache failed"
+php artisan view:cache || echo "⚠️ View cache failed"
 
 # Generate application key if not set
 if [ -z "${APP_KEY}" ] || [ "${APP_KEY}" = "" ]; then
     echo "⚠️ Warning: APP_KEY is not set. Application may not work correctly."
+fi
+
+# Verify Vite build assets exist
+if [ ! -d "/var/www/html/public/build" ]; then
+    echo "❌ ERROR: Vite build assets not found in /var/www/html/public/build"
+    echo "   This will cause 500 errors when loading the application."
+fi
+
+if [ ! -f "/var/www/html/public/build/.vite/manifest.json" ]; then
+    echo "❌ ERROR: Vite manifest not found at /var/www/html/public/build/.vite/manifest.json"
+    echo "   This will cause 500 errors when loading the application."
 fi
 
 # ------------------------------------------------------------------------------

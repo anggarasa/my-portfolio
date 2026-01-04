@@ -122,13 +122,67 @@ foreach ($criticalFiles as $name => $path) {
     ];
 }
 
-// Check Laravel error log
+// Check Vite build assets
+$buildDir = __DIR__ . '/build';
+$manifestFile = __DIR__ . '/build/.vite/manifest.json';
+
+$debug['vite_build'] = [
+    'build_directory_exists' => is_dir($buildDir),
+    'manifest_exists' => file_exists($manifestFile),
+];
+
+if (is_dir($buildDir)) {
+    $buildFiles = scandir($buildDir);
+    $debug['vite_build']['files'] = array_values(array_filter($buildFiles, fn($f) => $f !== '.' && $f !== '..'));
+}
+
+if (file_exists($manifestFile)) {
+    $manifest = json_decode(file_get_contents($manifestFile), true);
+    $debug['vite_build']['manifest_entries'] = array_keys($manifest ?? []);
+}
+
+// Check Laravel error log - parse for actual error messages
 $logFile = __DIR__ . '/../storage/logs/laravel.log';
 if (file_exists($logFile)) {
     $logContent = file_get_contents($logFile);
+
+    // Get last 100 lines for more context
     $logLines = explode("\n", $logContent);
-    $lastLines = array_slice($logLines, -30);
-    $debug['laravel_log_tail'] = implode("\n", $lastLines);
+    $lastLines = array_slice($logLines, -100);
+
+    // Find error entries (lines starting with [timestamp] production.ERROR)
+    $errors = [];
+    $currentError = null;
+
+    foreach ($lastLines as $line) {
+        // Match error header lines like: [2026-01-04 12:52:01] production.ERROR:
+        if (preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] \w+\.(ERROR|CRITICAL):(.*)/', $line, $matches)) {
+            if ($currentError) {
+                $errors[] = $currentError;
+            }
+            $currentError = [
+                'timestamp' => $matches[1],
+                'level' => $matches[2],
+                'message' => trim($matches[3]),
+                'context' => '',
+            ];
+        } elseif ($currentError && strpos($line, '#') !== 0 && !empty(trim($line))) {
+            // Add context but skip stack trace lines
+            if (strpos($line, '"exception"') !== false || strpos($line, '"url"') !== false) {
+                $currentError['context'] .= trim($line) . ' ';
+            }
+        }
+    }
+
+    if ($currentError) {
+        $errors[] = $currentError;
+    }
+
+    // Get last 5 errors
+    $debug['recent_errors'] = array_slice($errors, -5);
+
+    // Also include raw tail for context
+    $debug['laravel_log_tail'] = implode("\n", array_slice($logLines, -50));
 }
 
 // Recommendations
